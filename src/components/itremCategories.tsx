@@ -1,7 +1,12 @@
 import Image from 'next/image'
 
 
-export default function ItemCategories() {
+type Props = {
+    section:string;
+    quantity:number;
+}
+
+export default function ItemCategories({section ,quantity}:Props) {
 
     return(
     <div className='group flex items-center flex-1 bg-zinc-950/3 hover:bg-zinc-950/8 transition-all cursor-pointer rounded gap-3 p-2'>
@@ -15,8 +20,8 @@ export default function ItemCategories() {
         </div>
 
         <div className='flex flex-col '>
-            <p className=' font-bold text-zinc-950/90 '>Headphon</p>
-            <p className='text-[12px] font-semibold text-black/70'>240 Item Avaliable</p>
+            <p className=' font-bold text-zinc-950/90 '>{section}</p>
+            <p className='text-[12px] font-semibold text-black/70'>{quantity} Item Avaliable</p>
         </div>
     </div>
     )

@@ -5,6 +5,7 @@ import {useTranslations} from 'next-intl';
 import SearchIcon from '@/components/icons/search';
 import AccountIcon from '@/components/icons/account';
 import BtnNormal from '@/components/btnNormal';
+import Image from 'next/image';
 
 type databaseItemsType = [string,string,number][]
 
@@ -22,7 +23,8 @@ export default function Feedpage() {
     ]
 
     return(
-        <div className="flex flex-col w-full ">
+        <div className="flex flex-col w-full items-center ">
+            
             <nav className="flex item-center justify-center w-full bg-[#0f3612] ">
                 <div className='flex items-center justify-between w-full max-w-380 py-2 text-white/83 text-[13px] '>
                     <div className='flex gap-2 items-center '>
@@ -44,7 +46,7 @@ export default function Feedpage() {
                     </div>
                 </div>
             </nav>
-            <nav className='w-full flex items-center justify-center '>
+            <nav className='w-full flex items-center justify-center bg-zinc-50 static '>
 
 
                 <div className='max-w-380 w-full flex items-center gap-0 py-4 font-medium text-black/80 '>
@@ -76,15 +78,28 @@ export default function Feedpage() {
                             <ShoppingCart className='' size={20} />
                             <p>Cart</p>
                         </button>
-
-
                     </div>
+                </div>
+            </nav>
+
+            <div className='max-w-380 h-77 w-full flex bg-amber-200/40 mt-1 px-20 '>
+                <div className='flex-1 flex flex-col items-start justify-center gap-10'>
+                    <h1 className='text-5xl text-[#0f3612] font-bold '>Grab Upto 50% Off On Selected Headphone</h1>
+                    <button className='px-10 py-3 font-medium text-zinc-100/92 bg-[#0f3612] rounded-4xl '>Buy Now</button>
+
 
                 </div>
+                <div className='flex-1 flex items-center justify-end overflow-hidden '>
+                    <Image
+                    src="/pg/heroHomePG.png"
+                    width={480}
+                    height={480}
+                    alt="Picture of the Heandphone"
+                    className='bg-blue-400/0 mr-30 '
+                    />
+                </div>
 
-
-
-            </nav>
+            </div>
 
 
 

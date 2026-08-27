@@ -1,8 +1,10 @@
 'use client'
-import { Phone,ChevronDown  } from 'lucide-react';
+import { Phone ,ChevronDown ,ShoppingCart  } from 'lucide-react';
 import Dropdown from '@/components/dropdown';
 import {useTranslations} from 'next-intl';
-import SearchIcons from '@/components/icons/search';
+import SearchIcon from '@/components/icons/search';
+import AccountIcon from '@/components/icons/account';
+import BtnNormal from '@/components/btnNormal';
 
 type databaseItemsType = [string,string,number][]
 
@@ -45,18 +47,36 @@ export default function Feedpage() {
             <nav className='w-full flex items-center justify-center '>
 
 
-                <div className='max-w-380 w-full flex items-center gap-9 py-4  '>
-                    <p className='text-2xl text-[#0f3612] font-bold mr-17'>Shopcart</p>
-                    <Dropdown namesec={t("nav-sec1")} section={t("dropdown-sec1")} itemsCategories={databaseItems} />
-                    <button className='font-medium text-black/90 '>{t("nav-sec2")}</button>
-                    <button className='font-medium text-black/90 '>{t("nav-sec3")}</button>
-                    <button className='font-medium text-black/90 '>{t("nav-sec4")}</button>
+                <div className='max-w-380 w-full flex items-center gap-0 py-4 font-medium text-black/80 '>
+                    <p className='text-2xl text-[#0f3612] font-bold mr-25'>Shopcart</p>
+                    <div className='flex items-center gap-9'>
+                        <Dropdown namesec={t("nav-sec1")} section={t("dropdown-sec1")} itemsCategories={databaseItems} />
+                        <BtnNormal namepages={"HomePage"} keytext={"nav-sec2"} />
+                        <BtnNormal namepages={"HomePage"} keytext={"nav-sec3"} />
+                        <BtnNormal namepages={"HomePage"} keytext={"nav-sec4"} />
 
-                    <div className='flex items-center flex-1 '>
-                        <div className='relative '>
-                            <input type="text" placeholder='Search Product' className='flex-1 max-w-88 outline-none text-sm bg-black/4  flex items-center px-3 py-2 rounded-2xl ' />
-                            <SearchIcons className='absolute top-1/2 -translate-y-1/2 right-2 '  />
+                    </div>
+
+                    <div className='flex items-center justify-end flex-1 gap-9 text-black/80 '>
+                        <div className='relative flex items-center justify-center w-full max-w-90'>
+                            <input 
+                            type="text"
+                            placeholder='Search Product' 
+                            className='flex-1 outline-none text-sm bg-black/4 text-zinc-950/70 flex items-center px-5 py-2 rounded-2xl transition-all duration-300 ' 
+                            
+                            />
+                            <SearchIcon className='absolute top-1/2 -translate-y-1/2 right-2 '  />
                         </div>
+                        <button className='flex items-center justify-center gap-1 cursor-pointer hover:text-shadow-neutral-950 hover:text-black/70 transition-all duration-300'>
+                            <AccountIcon className='' />
+                            <p>Account</p>
+                        </button>
+
+                        <button className='flex items-center justify-center  gap-1 cursor-pointer hover:text-shadow-neutral-950 hover:text-black/70 transition-all duration-300'>
+                            <ShoppingCart className='' size={20} />
+                            <p>Cart</p>
+                        </button>
+
 
                     </div>
 

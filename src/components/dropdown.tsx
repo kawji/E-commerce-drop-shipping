@@ -32,7 +32,7 @@ export default function Dropdown({namesec,section,itemsCategories}:Props) {
 
     return(
         <div ref={categoriesRef} className='flex relative  h-4  '>
-            <div className="flex items-center gap-2 font-medium cursor-pointer text-black/90 hover:text-black/70 transition-all duration-300"
+            <div className="flex items-center gap-2 font-medium cursor-pointer text-black/80 hover:text-black/70 transition-all duration-300"
             onClick={()=> setCategories(true)}
             >
                 <p>{namesec}</p>

@@ -3,17 +3,19 @@ import { ChevronDown } from "lucide-react"
 import clsx from "clsx";
 import ItemCategories from "./itremCategories";
 import { useRef ,useEffect ,useState } from "react";
-
+import {useTranslations} from 'next-intl';
 
 
 type Props = {
+    namesec:string;
     section:string;
-    itemsCategories:[string,number][];
+    itemsCategories:[string,string,number][];
 }
 
-export default function Dropdown({section,itemsCategories}:Props) {
+export default function Dropdown({namesec,section,itemsCategories}:Props) {
     const [categories,setCategories] = useState(false);
     const categoriesRef = useRef<HTMLDivElement>(null);
+  
 
     useEffect(() => {
         function handleShowCategories(event:MouseEvent) {
@@ -33,7 +35,7 @@ export default function Dropdown({section,itemsCategories}:Props) {
             <div className="flex items-center gap-2 font-medium cursor-pointer text-black/90 hover:text-black/70 transition-all duration-300"
             onClick={()=> setCategories(true)}
             >
-                <p>Categories</p>
+                <p>{namesec}</p>
                 <ChevronDown size={20} className='text-black/72  ' />
             </div>
 
@@ -46,9 +48,9 @@ export default function Dropdown({section,itemsCategories}:Props) {
                 </div>
                 
                 <div className='grid grid-cols-2 gap-x-6 gap-y-5 w-full '>
-                    {itemsCategories.map(([name,quantity],index) => {
+                    {itemsCategories.map(([src,name,quantity],index) => {
                         return(
-                        <ItemCategories section={name} quantity={quantity} key={index} />
+                        <ItemCategories src={src} section={name} quantity={quantity} key={index} />
                     )})}
 
                 </div>

@@ -3,7 +3,7 @@ import { ChevronDown } from "lucide-react"
 import clsx from "clsx";
 import ItemCategories from "./itremCategories";
 import { useRef ,useEffect ,useState } from "react";
-import {useTranslations} from 'next-intl';
+
 
 
 type Props = {
@@ -31,7 +31,7 @@ export default function Dropdown({namesec,section,itemsCategories}:Props) {
 
 
     return(
-        <div ref={categoriesRef} className='flex relative  h-4  '>
+        <div ref={categoriesRef} className='flex relative z-12 h-4  '>
             <div className="flex items-center gap-2 font-medium cursor-pointer text-black/80 hover:text-black/70 transition-all duration-300"
             onClick={()=> setCategories(true)}
             >
@@ -39,7 +39,7 @@ export default function Dropdown({namesec,section,itemsCategories}:Props) {
                 <ChevronDown size={20} className='text-black/72  ' />
             </div>
 
-            <div className={clsx('absolute z-2 top-8  w-169 flex flex-col items-start  border border-black/8 py-2 px-5 rounded-md transition-all duration-150 '
+            <div className={clsx('absolute z-10 top-8 bg-[#F8F9FA] w-169 flex flex-col items-start  border border-black/8 py-2 px-5 rounded-md transition-all duration-150 '
                 ,categories? 'opacity-100 scale-100 pointer-events-auto':'opacity-0 scale-95 pointer-events-none'
             )}
             >

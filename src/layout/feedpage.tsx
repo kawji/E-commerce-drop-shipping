@@ -5,6 +5,7 @@ import {useTranslations} from 'next-intl';
 import SearchIcon from '@/components/icons/search';
 import AccountIcon from '@/components/icons/account';
 import BtnNormal from '@/components/btnNormal';
+import BtnSort from '@/components/btnSort';
 import Image from 'next/image';
 
 type databaseItemsType = [string,string,number][]
@@ -82,23 +83,35 @@ export default function Feedpage() {
                 </div>
             </nav>
 
-            <div className='max-w-380 h-77 w-full flex bg-amber-200/40 mt-1 px-20 '>
-                <div className='flex-1 flex flex-col items-start justify-center gap-10'>
+            <div className='max-w-380 h-77 w-full flex bg-amber-200/45 mt-1 px-20 '>
+                <div className='flex-1 flex flex-col items-start justify-center gap-8'>
                     <h1 className='text-5xl text-[#0f3612] font-bold '>Grab Upto 50% Off On Selected Headphone</h1>
-                    <button className='px-10 py-3 font-medium text-zinc-100/92 bg-[#0f3612] rounded-4xl '>Buy Now</button>
-
-
+                    <button className='px-10 py-3 font-medium text-zinc-100/92 bg-[#0f3612] hover:bg-[#0f3612de] transition-colors rounded-4xl cursor-pointer '>Buy Now</button>
                 </div>
-                <div className='flex-1 flex items-center justify-end overflow-hidden '>
+                <div className='relative flex-1 flex items-center justify-end overflow-hidden '>
                     <Image
-                    src="/pg/heroHomePG.png"
-                    width={480}
-                    height={480}
+                    src="/pg/headphonegire.png"
+                    fill
                     alt="Picture of the Heandphone"
-                    className='bg-blue-400/0 mr-30 '
+                    className=' object-cover -translate-x-30 ' 
                     />
                 </div>
+            </div>
 
+            <div className='flex items-center w-full max-w-380 bg-amber-100/5 mt-12 gap-4 '>
+
+                <BtnSort sections='Headphone Type' />
+                <BtnSort sections='Price' />
+                <BtnSort sections='Review' />
+                <BtnSort sections='Color' />
+                <BtnSort sections='Meterial' />
+                <BtnSort sections='Offer' />
+
+                <button className='flex items-center px-3 py-1 rounded-2xl border border-black/12 ml-auto gap-2 font-semibold text-[13px] text-black/83 cursor-pointer hover:bg-black/10 transition-colors '>
+                    <p>Sort by</p>
+                    <ChevronDown size={15} className='text-black font-medium' />
+                </button>
+ 
             </div>
 
 

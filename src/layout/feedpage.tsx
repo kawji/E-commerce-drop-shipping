@@ -2,13 +2,13 @@
 import { Phone ,ChevronDown ,ShoppingCart  } from 'lucide-react';
 import Dropdown from '@/components/dropdown';
 import {useTranslations} from 'next-intl';
-import SearchIcon from '@/components/icons/search';
-import AccountIcon from '@/components/icons/account';
+import SearchIcon from '@/icons/search';
+import AccountIcon from '@/icons/account';
 import BtnNormal from '@/components/btnNormal';
 import BtnSort from '@/components/btnSort';
 import Image from 'next/image';
-import Staricon from '@/components/icons/star';
-
+import ItemProduct from '@/components/itemProduct';
+import BurgerIcon from '@/icons/burger';
 
 
 type databaseItemsType = [string,string,number][]
@@ -30,7 +30,7 @@ export default function Feedpage() {
         <div className="flex flex-col w-full items-center mb-50 ">
             
             <nav className="flex item-center justify-center w-full bg-[#0f3612] ">
-                <div className='flex items-center justify-between w-full max-w-380 py-2 text-white/83 text-[13px] '>
+                <div className='hidden lg:flex items-center justify-between w-full max-w-380 xl:mx-18 lg:mx-13 mx-10 py-2 text-white/83 text-[12px] lg:text-[13px] '>
                     <div className='flex gap-2 items-center '>
                         <Phone size={15} />
                         <p>+024 862 8685</p>
@@ -38,14 +38,14 @@ export default function Feedpage() {
                     <div className='flex gap-2 items-center '>
                         <p>{t('top-nav')}</p>      
                     </div>
-                    <div className='flex gap-3'>
-                        <div className='flex gap-2'>
+                    <div className='flex items-center  gap-3'>
+                        <div className='flex items-center gap-1'>
                             <p>Eng</p>
-                            <ChevronDown />
+                            <ChevronDown size={15} />
                         </div>
-                        <div className='flex gap-2'>
+                        <div className='flex items-center gap-1'>
                             <p>Location</p>
-                            <ChevronDown />
+                            <ChevronDown size={15} />
                         </div>
                     </div>
                 </div>
@@ -53,9 +53,10 @@ export default function Feedpage() {
             <nav className='w-full flex items-center justify-center bg-zinc-50 static '>
 
 
-                <div className='max-w-380 w-full flex items-center gap-0 py-4 font-medium text-black/80 '>
-                    <p className='text-2xl text-[#0f3612] font-bold mr-25'>Shopcart</p>
-                    <div className='flex items-center gap-9'>
+                <div className='max-w-380 w-full flex items-center py-4 font-medium text-black/80 xl:mx-18 lg:mx-13 mx-10 lg:text-sm xl:text-base transition-all '>
+                    <BurgerIcon className='flex lg:hidden w-5 h-5 mr-5 cursor-pointer hover:text-black/75 ' />
+                    <p className='text-2xl text-[#0f3612] font-bold lg:mr-8 xl:mr-15 2xl:mr-25'>Shopcart</p>
+                    <div className='hidden lg:flex shrink-0 items-center gap-5 2xl:gap-9 xl:gap-5  '>
                         <Dropdown namesec={t("nav-sec1")} section={t("dropdown-sec1")} itemsCategories={databaseItems} />
                         <BtnNormal namepages={"HomePage"} keytext={"nav-sec2"} />
                         <BtnNormal namepages={"HomePage"} keytext={"nav-sec3"} />
@@ -63,24 +64,22 @@ export default function Feedpage() {
 
                     </div>
 
-                    <div className='flex items-center justify-end flex-1 gap-9 text-black/80 '>
-                        <div className='relative flex items-center justify-center w-full max-w-90'>
+                    <div className='flex items-center justify-end flex-1 gap-5 2xl:gap-9 xl:gap-5 text-black/80 lg:text-sm xl:text-base '>
+                        <div className='relative flex items-center justify-center w-full ml-5 lg:ml-10 xl:ml-15  max-w-90'>
                             <input 
                             type="text"
                             placeholder='Search Product' 
-                            className='flex-1 outline-none text-sm bg-black/4 text-zinc-950/70 flex items-center px-5 py-2 rounded-2xl transition-all duration-300 ' 
+                            className=' flex-1 outline-none text-sm bg-black/4 text-zinc-950/70 hidden sm:flex items-center px-5 py-2 rounded-2xl transition-all duration-300 ' 
                             
                             />
-                            <SearchIcon className='absolute top-1/2 -translate-y-1/2 right-2 '  />
+                            <SearchIcon className='absolute top-1/2 -translate-y-1/2 right-2 text-black/90 sm:text-[#7F8487] '  />
                         </div>
+                        <button className='flex items-center justify-center shrink-0  gap-1 cursor-pointer hover:text-shadow-neutral-950 hover:text-black/70 transition-all duration-300'>
+                            <ShoppingCart className='' size={15} />
+                            <p>Cart</p>
+                        </button>
                         <button className='flex items-center justify-center gap-1 cursor-pointer hover:text-shadow-neutral-950 hover:text-black/70 transition-all duration-300'>
                             <AccountIcon className='' />
-                            <p>Account</p>
-                        </button>
-
-                        <button className='flex items-center justify-center  gap-1 cursor-pointer hover:text-shadow-neutral-950 hover:text-black/70 transition-all duration-300'>
-                            <ShoppingCart className='' size={20} />
-                            <p>Cart</p>
                         </button>
                     </div>
                 </div>
@@ -96,7 +95,11 @@ export default function Feedpage() {
                     src="/pg/headphonegire.png"
                     fill
                     alt="Picture of the Heandphone"
-                    className=' object-cover -translate-x-30 ' 
+                    sizes='100vw'
+                    style={{
+                        objectFit:'cover'
+                    }}
+                    className=' -translate-x-30 ' 
                     />
                 </div>
             </div>
@@ -121,58 +124,18 @@ export default function Feedpage() {
                 <p>Headphones For You!</p>                
             </div>
             <div className='grid grid-cols-6 w-full max-w-380 gap-4 mt-5 '>
-
-                <div className='flex flex-col items-center aspect-1/1.25 gap-3 hover:shadow hover:scale-101 cursor-pointer transition-all duration-300 p-2 rounded '>
-                    <div className=' relative w-full aspect-1.5/1.25 flex items-center justify-center bg-black/5 rounded-md '>
-                        <Image 
-                        src="/pg/headphone1-.png"
-                        width={180}
-                        height={180}
-                        className='object-cover '
-                        alt="Picture of the headphon"
-                        />
-
-                    </div>
-                    <div className='flex-1 w-full flex flex-col  '>
-                        <div className='flex flex-col w-full gap-1'>
-                            <div className='flex items-center justify-between text-base  font-bold text-black/88 '>
-                                <p className=' leading-none '>Bose BT Earphones</p>
-                                <span className='flex text-[11px] '>
-                                    <p>$</p>
-                                    <p className='text-base'>283</p>
-                                    <p>.00</p>
-                                </span>
-                            </div>
-                            <div className='text-[11px] text-black/70 font-semibold '>
-                                Table with air purifier, stained venner/black
-                            </div>
-                            <div className='flex gap-1 '>
-                                <Staricon className='text-green-500' />
-                                <Staricon className='text-green-500' />
-                                <Staricon className='text-green-500' />
-                                <Staricon className='text-green-500' />
-                                <Staricon className='text-green-500' />
-                                <p className='text-[12px] ml-1 text-black/77 '>(121)</p>
-                            </div>
-                            <div className='w-full flex items-center mt-1'>
-                                <button className='px-3.5 py-1.5 border rounded-3xl text-[12px] font-semibold tracking-wide cursor-pointer border-[#0f3612] bg-zince-50 hover:bg-[#0f3612] hover:text-white/93 text-black/90  transition-colors  '>Add to Cart</button>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-                
-
-                </div>
-
-
-
-
-
-
-
-
+                <ItemProduct />
+                <ItemProduct />
+                <ItemProduct />
+                <ItemProduct />
+                <ItemProduct />
+                <ItemProduct />
+                <ItemProduct />
+                <ItemProduct />
+                <ItemProduct />
+                <ItemProduct />
+                <ItemProduct />
+                <ItemProduct />
             </div>
 
 

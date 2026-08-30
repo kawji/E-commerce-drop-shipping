@@ -27,7 +27,7 @@ export default function Feedpage() {
     ]
 
     return(
-        <div className="flex flex-col w-full items-center mb-50 ">
+        <div className="flex flex-col w-full items-center mb-50  ">
             
             <nav className="flex item-center justify-center w-full bg-[#0f3612] ">
                 <div className='hidden lg:flex items-center justify-between w-full max-w-380 xl:mx-18 lg:mx-13 mx-10 py-2 text-white/83 text-[12px] lg:text-[13px] '>
@@ -64,15 +64,15 @@ export default function Feedpage() {
 
                     </div>
 
-                    <div className='flex items-center justify-end flex-1 gap-5 2xl:gap-9 xl:gap-5 text-black/80 lg:text-sm xl:text-base '>
-                        <div className='relative flex items-center justify-center w-full ml-5 lg:ml-10 xl:ml-15  max-w-90'>
+                    <div className='flex items-center justify-end flex-1 gap-3 sm:gap-5 2xl:gap-9 xl:gap-5 text-black/80 lg:text-sm xl:text-base '>
+                        <div className='relative  flex items-center justify-center w-full ml-5 lg:ml-10 xl:ml-15  max-w-90'>
                             <input 
                             type="text"
                             placeholder='Search Product' 
                             className=' flex-1 outline-none text-sm bg-black/4 text-zinc-950/70 hidden sm:flex items-center px-5 py-2 rounded-2xl transition-all duration-300 ' 
                             
                             />
-                            <SearchIcon className='absolute top-1/2 -translate-y-1/2 right-2 text-black/90 sm:text-[#7F8487] '  />
+                            <SearchIcon className='absolute top-1/2 -translate-y-1/2 right-0 lg:right-2 text-black/90 sm:text-[#7F8487] '  />
                         </div>
                         <button className='flex items-center justify-center shrink-0  gap-1 cursor-pointer hover:text-shadow-neutral-950 hover:text-black/70 transition-all duration-300'>
                             <ShoppingCart className='' size={15} />
@@ -85,40 +85,42 @@ export default function Feedpage() {
                 </div>
             </nav>
 
-            <div className='max-w-380 h-77 w-full flex bg-amber-200/45 mt-1 px-20 '>
-                <div className='flex-1 flex flex-col items-start justify-center gap-8'>
-                    <h1 className='text-5xl text-[#0f3612] font-bold '>Grab Upto 50% Off On Selected Headphone</h1>
-                    <button className='px-10 py-3 font-medium text-zinc-100/92 bg-[#0f3612] hover:bg-[#0f3612de] transition-colors rounded-4xl cursor-pointer '>Buy Now</button>
+            <div className='max-w-380 relative h-55 sm:h-63 lg:h-77 w-full flex bg-amber-200/45 mt-1 lg:px-15 xl:px-18 '>
+                <div className='flex-1 flex flex-col items-center md:items-start text-center justify-center gap-5 lg:gap-8 md:pl-10 '>
+                    <h1 className='lg:text-5xl md:text-4xl text-[8vw] leading-none sm:text-5xl text-wrap md:text-nowrap text-[#0f3612] font-bold  '>Grab Upto 50% Off On <br/>Selected Headphone</h1>
+                    <button className='md:px-10 md:py-3 py-2.5 sm:px-8 px-6 text-sm md:text-base font-medium text-zinc-100/92 bg-[#0f3612] hover:bg-[#0f3612de] transition-colors rounded-4xl cursor-pointer '>Buy Now</button>
                 </div>
-                <div className='relative flex-1 flex items-center justify-end overflow-hidden '>
+                <div className='md:relative min-w-90  hidden lg:flex-1 shrink-0 md:flex items-center  bg-amber-800/25 overflow-hidden '>
                     <Image
                     src="/pg/headphonegire.png"
                     fill
+                    sizes='auto'
                     alt="Picture of the Heandphone"
-                    sizes='100vw'
-                    style={{
-                        objectFit:'cover'
-                    }}
-                    className=' -translate-x-30 ' 
+                    className=' object-cover object-right shrink-0  ' 
                     />
                 </div>
             </div>
+            <div className='w-full xl:px-18 lg:px-13 px-10'>
+                <div className='flex items-center w-full max-w-380  mt-12 gap-4    '>
+                    <div className='flex items-center flex-wrap gap-4'>
+                        <BtnSort sections='Headphone Type' classStyle='sm:flex hidden' />
+                        <BtnSort sections='Price' classStyle='sm:flex hidden' />
+                        <BtnSort sections='Review' classStyle='sm:flex hidden' />
+                        <BtnSort sections='Color' classStyle='sm:flex hidden' />
+                        <BtnSort sections='Meterial' classStyle='sm:flex hidden' />
+                        <BtnSort sections='Offer' classStyle='sm:flex hidden' />
+                        <BtnSort sections='All Filters' iconFillter={true} classStyle='sm:hidden' />
+                    </div>
+                    <button className='flex shrink-0 items-center px-3 py-1 rounded-2xl border border-black/12 ml-auto gap-2 font-semibold text-[13px] text-black/83 cursor-pointer hover:bg-black/10 transition-colors '>
+                        <p>Sort by</p>
+                        <ChevronDown size={15} className='text-black font-medium' />
+                    </button>
 
-            <div className='flex items-center w-full max-w-380 bg-amber-100/5 mt-12 gap-4 '>
+                </div>
 
-                <BtnSort sections='Headphone Type' />
-                <BtnSort sections='Price' />
-                <BtnSort sections='Review' />
-                <BtnSort sections='Color' />
-                <BtnSort sections='Meterial' />
-                <BtnSort sections='Offer' />
-
-                <button className='flex items-center px-3 py-1 rounded-2xl border border-black/12 ml-auto gap-2 font-semibold text-[13px] text-black/83 cursor-pointer hover:bg-black/10 transition-colors '>
-                    <p>Sort by</p>
-                    <ChevronDown size={15} className='text-black font-medium' />
-                </button>
- 
             </div>
+
+
 
             <div className='w-full max-w-380 flex items-center font-bold text-xl mt-6 text-black/90 '>
                 <p>Headphones For You!</p>                

@@ -137,19 +137,21 @@ export default function Feedpage() {
             </div>
 
 
+            <div className='flex flex-col items-center w-full xl:px-18 lg:px-13 px-10 '>
+                <div className=' w-full max-w-380 flex items-center font-bold text-xl mt-6 text-black/90 '>
+                    <p>Headphones For You!</p>                
+                </div>
+                <div className=' grid 2xl:grid-cols-6 xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 xs:grid-cols-2 grid-cols-1  w-full max-w-380 gap-4 mt-5 '>
+                    {
+                        databaseProducts.map((i) => {
+                            return(
+                                <ItemProduct id={i.id} src={i.src} section={i.section} description={i.description} popular={i.popular} price={i.price} scrap={i.scrap} key={i.id} />
+                            )
+                        })
+                    }
+                </div>
+            </div>
 
-            <div className='xl:px-18 lg:px-13 px-10 w-full max-w-380 flex items-center font-bold text-xl mt-6 text-black/90 '>
-                <p>Headphones For You!</p>                
-            </div>
-            <div className='xl:px-18 lg:px-13 px-10 grid 2xl:grid-cols-6 xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 xs:grid-cols-2 grid-cols-1  w-full max-w-380 gap-4 mt-5 '>
-                {
-                    databaseProducts.map((i) => {
-                        return(
-                            <ItemProduct id={i.id} src={i.src} section={i.section} description={i.description} popular={i.popular} price={i.price} scrap={i.scrap} key={i.id} />
-                        )
-                    })
-                }
-            </div>
 
 
 

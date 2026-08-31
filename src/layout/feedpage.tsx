@@ -9,7 +9,7 @@ import BtnSort from '@/components/btnSort';
 import Image from 'next/image';
 import ItemProduct from '@/components/itemProduct';
 import BurgerIcon from '@/icons/burger';
-
+import { DataProduct } from '@/type/datatype';
 
 type databaseItemsType = [string,string,number][]
 
@@ -24,6 +24,22 @@ export default function Feedpage() {
         ['/itemHeadphone.jpg',"Computer",190],
         ['/itemHeadphone.jpg',"phone",150],
         ['/itemHeadphone.jpg',"Mouse",90]
+    ]
+
+    const databaseProducts:DataProduct[] = [
+        {id:"headphone1",src:"/pg/headphone1-.png",section:"Bose BT Earphones",description:"Table with air purifier, stained venner/black",price:283,popular:120},
+        {id:"headphone2",src:"/pg/headphone1-.png",section:"Bose BT Earphones",description:"Table with air purifier, stained venner/black",price:283,popular:120},
+        {id:"headphone3",src:"/pg/headphone1-.png",section:"Bose BT Earphones",description:"Table with air purifier, stained venner/black",price:283,popular:120},
+        {id:"headphone4",src:"/pg/headphone1-.png",section:"Bose BT Earphones",description:"Table with air purifier, stained venner/black",price:283,popular:120},
+        {id:"headphone5",src:"/pg/headphone1-.png",section:"Bose BT Earphones",description:"Table with air purifier, stained venner/black",price:283,popular:120},
+        {id:"headphone6",src:"/pg/headphone1-.png",section:"Bose BT Earphones",description:"Table with air purifier, stained venner/black",price:283,popular:120},
+        {id:"headphone7",src:"/pg/headphone1-.png",section:"Bose BT Earphones",description:"Table with air purifier, stained venner/black",price:283,popular:120},
+        {id:"headphone8",src:"/pg/headphone1-.png",section:"Bose BT Earphones",description:"Table with air purifier, stained venner/black",price:283,popular:120},
+        {id:"headphone9",src:"/pg/headphone1-.png",section:"Bose BT Earphones",description:"Table with air purifier, stained venner/black",price:283,popular:120},
+        {id:"headphone10",src:"/pg/headphone1-.png",section:"Bose BT Earphones",description:"Table with air purifier, stained venner/black",price:283,popular:120},
+        {id:"headphon11",src:"/pg/headphone1-.png",section:"Bose BT Earphones",description:"Table with air purifier, stained venner/black",price:283,popular:120},
+        {id:"headphone12",src:"/pg/headphone1-.png",section:"Bose BT Earphones",description:"Table with air purifier, stained venner/black",price:283,popular:120},
+        {id:"headphone13",src:"/pg/headphone1-.png",section:"Bose BT Earphones",description:"Table with air purifier, stained venner/black",price:283,popular:120},
     ]
 
     return(
@@ -90,7 +106,7 @@ export default function Feedpage() {
                     <h1 className='lg:text-5xl md:text-4xl text-[8vw] leading-none sm:text-5xl text-wrap md:text-nowrap text-[#0f3612] font-bold  '>Grab Upto 50% Off On <br/>Selected Headphone</h1>
                     <button className='md:px-10 md:py-3 py-2.5 sm:px-8 px-6 text-sm md:text-base font-medium text-zinc-100/92 bg-[#0f3612] hover:bg-[#0f3612de] transition-colors rounded-4xl cursor-pointer '>Buy Now</button>
                 </div>
-                <div className='md:relative min-w-90  hidden lg:flex-1 shrink-0 md:flex items-center  bg-amber-800/25 overflow-hidden '>
+                <div className='md:relative min-w-90  hidden lg:flex-1 shrink-0 md:flex items-center overflow-hidden '>
                     <Image
                     src="/pg/headphonegire.png"
                     fill
@@ -100,7 +116,7 @@ export default function Feedpage() {
                     />
                 </div>
             </div>
-            <div className='w-full xl:px-18 lg:px-13 px-10'>
+            <div className='w-full  flex justify-center xl:px-18 lg:px-13 px-10'>
                 <div className='flex items-center w-full max-w-380  mt-12 gap-4    '>
                     <div className='flex items-center flex-wrap gap-4'>
                         <BtnSort sections='Headphone Type' classStyle='sm:flex hidden' />
@@ -122,28 +138,18 @@ export default function Feedpage() {
 
 
 
-            <div className='w-full max-w-380 flex items-center font-bold text-xl mt-6 text-black/90 '>
+            <div className='xl:px-18 lg:px-13 px-10 w-full max-w-380 flex items-center font-bold text-xl mt-6 text-black/90 '>
                 <p>Headphones For You!</p>                
             </div>
-            <div className='grid grid-cols-6 w-full max-w-380 gap-4 mt-5 '>
-                <ItemProduct />
-                <ItemProduct />
-                <ItemProduct />
-                <ItemProduct />
-                <ItemProduct />
-                <ItemProduct />
-                <ItemProduct />
-                <ItemProduct />
-                <ItemProduct />
-                <ItemProduct />
-                <ItemProduct />
-                <ItemProduct />
+            <div className='xl:px-18 lg:px-13 px-10 grid 2xl:grid-cols-6 xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 xs:grid-cols-2 grid-cols-1  w-full max-w-380 gap-4 mt-5 '>
+                {
+                    databaseProducts.map((i) => {
+                        return(
+                            <ItemProduct id={i.id} src={i.src} section={i.section} description={i.description} popular={i.popular} price={i.price} scrap={i.scrap} key={i.id} />
+                        )
+                    })
+                }
             </div>
-
-
-
-
-
 
 
 

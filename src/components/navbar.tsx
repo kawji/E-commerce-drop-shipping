@@ -1,4 +1,4 @@
-
+'use client'
 import { Phone,ChevronDown ,SearchIcon ,ShoppingCart  } from "lucide-react"
 import Dropdown from "./dropdown"
 import BtnNormal from "./btnNormal"

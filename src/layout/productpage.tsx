@@ -2,9 +2,19 @@
 import Navbar from "@/components/navbar"
 import Image from "next/image"
 import Staricon from "@/icons/star"
-
+import SelectColor from "@/app/products/[id]/_components/selectColor"
+import { useState } from "react"
 
 export default function ProductPage() {
+    const [currentColor,setCurrentColor] = useState("red")
+
+    const AVAILABLE_COLORS = [
+        { id: "red", bg600: "bg-red-600", bg300: "bg-red-300" },
+        { id: "blue", bg600: "bg-blue-600", bg300: "bg-blue-300" },
+        { id: "green", bg600: "bg-emerald-600", bg300: "bg-emerald-300" },
+        { id: "zinc", bg600: "bg-zinc-600/90", bg300: "bg-zinc-300" },
+      ];
+
 
     return(
         <div className=" flex flex-col items-center w-full">
@@ -81,31 +91,11 @@ export default function ProductPage() {
                     <div className="flex flex-col py-7 border-b border-b-black/8 gap-3 ">
                         <h1 className="font-bold text-2xl text-zinc-950/88 leading-relaxed">Choose a Color</h1>
                         <div className="flex items-center gap-3 ">
-
-                            <div className=" flex items-center justify-center rounded-full aspect-square w-10 border-[1.5px] border-green-900 p-0.75 ">
-                                <div className="flex flex-col items-center justify-center rounded-full w-full h-full overflow-hidden ">
-                                    <span className="flex flex-1 w-full  bg-cyan-600/90"></span>
-                                    <span className="flex flex-1 w-full  bg-cyan-300"></span>
-                                </div>
-                            </div>
-                            <div className=" flex items-center justify-center rounded-full aspect-square w-10 border-[1.5px] border-green-900/0 p-0.75 ">
-                                <div className="flex flex-col items-center justify-center rounded-full w-full h-full overflow-hidden ">
-                                    <span className="flex flex-1 w-full  bg-red-600/90"></span>
-                                    <span className="flex flex-1 w-full  bg-red-300"></span>
-                                </div>
-                            </div>
-                            <div className=" flex items-center justify-center rounded-full aspect-square w-10 border-[1.5px] border-green-900/0 p-0.75 ">
-                                <div className="flex flex-col items-center justify-center rounded-full w-full h-full overflow-hidden ">
-                                    <span className="flex flex-1 w-full  bg-green-600/90"></span>
-                                    <span className="flex flex-1 w-full  bg-green-300"></span>
-                                </div>
-                            </div>
-                            <div className=" flex items-center justify-center rounded-full aspect-square w-10 border-[1.5px] border-green-900/0 p-0.75 ">
-                                <div className="flex flex-col items-center justify-center rounded-full w-full h-full overflow-hidden ">
-                                    <span className="flex flex-1 w-full  bg-zinc-600/90"></span>
-                                    <span className="flex flex-1 w-full  bg-zinc-300"></span>
-                                </div>
-                            </div>
+                            {AVAILABLE_COLORS.map((color)=> {
+                                return(
+                                    <SelectColor colorName={color.id}  color600={color.bg600} color300={color.bg300} select={color.id === currentColor} onSelect={setCurrentColor} key={color.id} />
+                                )
+                            })}
 
                         </div>
                     </div>

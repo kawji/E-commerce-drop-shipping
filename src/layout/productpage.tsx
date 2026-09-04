@@ -5,10 +5,13 @@ import Staricon from "@/icons/star"
 import SelectColor from "@/app/products/[id]/_components/selectColor"
 import { useState } from "react"
 import clsx from "clsx"
+import ButtonCount from "@/app/products/[id]/_components/buttonCount"
+import { Truck,Album } from 'lucide-react';
+import TagProduct from "@/app/products/[id]/_components/tagProduct"
+import { TagProductType } from "@/app/products/[id]/type/typeTag"
 
 export default function ProductPage() {
     const [currentColor,setCurrentColor] = useState("red");
-    const [countProduct,setCountProduct] = useState(1);
     const [limitCountProduct,setLimitCountProduct] = useState(12);
 
     const AVAILABLE_COLORS = [
@@ -16,15 +19,20 @@ export default function ProductPage() {
         { id: "blue", bg600: "bg-blue-600", bg300: "bg-blue-300" },
         { id: "green", bg600: "bg-emerald-600", bg300: "bg-emerald-300" },
         { id: "zinc", bg600: "bg-zinc-600/90", bg300: "bg-zinc-300" },
-      ];
+    ];
+
+    const DATA_TAG_PRODUCT:TagProductType[] = [
+        {icon:Truck,section:"Free Delivery",word1:'',underword1:"Enter your Postal code for Delivery Availability",word2:'',underword2:"",word3:'',underword3:'' ,space:"gap-0"},
+        {icon:Album,section:"Return Delivery",word1:"Free 30day Delivery Returns.",underword1:" Details",word2:'',underword2:"",word3:'',underword3:'',space:"gap-1"},
+    ]
 
 
     return(
-        <div className=" flex flex-col items-center w-full">
+        <div className=" flex flex-col items-center w-full pb-50 ">
             <Navbar />
             <div className="flex flex-row w-full max-w-380 mt-8 ">
-                <div className="flex flex-col w-[38%]  gap-4 ">
-                    <div className="w-full relative flex items-center justify-center aspect-1.5/1.25 rounded-lg overflow-hidden bg-black/4 group hover:bg-black/7 cursor-zoom-in transition-all duration-300 ">
+                <div className="flex flex-col w-[39%]  gap-4 ">
+                    <div className="w-full relative flex items-center justify-center aspect-1.5/1.5 rounded-lg overflow-hidden bg-black/4 group hover:bg-black/7 cursor-zoom-in transition-all duration-300 ">
                         <Image
                         src={"/pg/headphone1-.png"}
                         alt="product headphone"
@@ -102,40 +110,45 @@ export default function ProductPage() {
 
                         </div>
                     </div>
-                    <div className=" py-7 border-b border-b-black/8  flex items-center  ">
 
-                        <div className="grid grid-cols-3 aspect-3.75/1 w-38 bg-black/3 rounded-full ">
-                            <button className={clsx("flex items-center justify-center w-full h-full text-xl cursor-pointer scale-130 hover:scale-170 transition-all duration-300 "
-                                ,countProduct === 1 ? "opacity-40":"opacity-100"
-                            )}
-                                onClick={() => setCountProduct((prev) => {
-                                    if(prev > 1) {
-                                        return prev-1
-                                    }
-                                    return prev
-                                })}
-                            >-</button>
-                            <div className="flex items-center justify-center w-full h-full text-base ">{countProduct}</div>
-                            <button className={clsx("flex items-center justify-center w-full h-full text-xl cursor-pointer scale-130 hover:scale-170 transition-all duration-300 "
-                                ,countProduct === limitCountProduct ? "opacity-40":"opacity-100"
-                            )}
-                            onClick={() => setCountProduct((prev) => {
-                                if(prev < limitCountProduct) {
-                                    return prev + 1
-                                }
-                                return prev
-                            })}
-
-                            >+</button>
-
+                    <div className="flex flex-col py-7  gap-5 ">
+                        <div className=" flex items-center gap-10 ">
+                            <ButtonCount limit={limitCountProduct} />
+                            <div className="flex flex-col text-sm font-medium text-zinc-950/90 ">
+                                <span className="flex items-center gap-1 ">
+                                    <p>Only </p> 
+                                    <p className="text-yellow-600/90 gap-1"> {limitCountProduct} items </p>
+                                    <p>Left! </p>
+                                </span>
+                                <span>Don't miss it</span>
+                            </div>
                         </div>
 
+                        <div className="flex items-center gap-5 ">
+                            <button className="flex items-center justify-center px-18 py-2.75 rounded-full bg-[#0f3612] text-zinc-100/90 hover:bg-[#0f3612e5] transition-all duration-300 cursor-pointer  ">Buy Now</button>
+                            <button className="flex items-center justify-center px-18 py-2.75 rounded-full bg-zinc-50 border border-[#0f3612a4] text-[#0f3612a4] hover:bg-zinc-200/45 transition-all duration-300 cursor-pointer  ">Add to Cart</button>
+                        </div>
+                    
+                        <div className="flex flex-col w-full max-w-110 border-x border-t border-x-black/6 border-t-black/6 shadow-2xs rounded-md overflow-hidden mt-3 ">
+                        
+                            {DATA_TAG_PRODUCT.map((i) => {
+                                return(
+                                    <TagProduct 
+                                    icon={i.icon} 
+                                    section={i.section} 
+                                    word1={i.word1} 
+                                    underword1={i.underword1} 
+                                    word2={i.word2 }
+                                    underword2={i.underword2} 
+                                    word3={i.word3} 
+                                    underword3={i.underword3} 
+                                    space={i.space}
+                                    />
+                                )
+                            })}
 
-
-
+                        </div>
                     </div>
-
-
 
 
                 </div>

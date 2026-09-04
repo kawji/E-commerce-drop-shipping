@@ -4,9 +4,12 @@ import Image from "next/image"
 import Staricon from "@/icons/star"
 import SelectColor from "@/app/products/[id]/_components/selectColor"
 import { useState } from "react"
+import clsx from "clsx"
 
 export default function ProductPage() {
-    const [currentColor,setCurrentColor] = useState("red")
+    const [currentColor,setCurrentColor] = useState("red");
+    const [countProduct,setCountProduct] = useState(1);
+    const [limitCountProduct,setLimitCountProduct] = useState(12);
 
     const AVAILABLE_COLORS = [
         { id: "red", bg600: "bg-red-600", bg300: "bg-red-300" },
@@ -73,7 +76,7 @@ export default function ProductPage() {
                 <div className="flex flex-col flex-1 bg-black/0 px-15 text-zinc-950">
                     <div className="flex flex-col bg-black/0 pb-7 border-b border-b-black/8  ">
                         <h1 className="font-bold text-4xl leading-relaxed">Airpods-Max</h1>
-                        <p className="font-medium text-sm text-black/60  ">a perfect balance of exhilarating hifh-fidelity audio and the effortiess magic of AirPods.</p>
+                        <p className="font-medium text-base text-black/60  ">a perfect balance of exhilarating hifh-fidelity audio and the effortiess magic of AirPods.</p>
                         <div className='flex items-center mt-1 gap-1 '>
                             <Staricon className='text-green-500' />
                             <Staricon className='text-green-500' />
@@ -86,7 +89,7 @@ export default function ProductPage() {
                     </div>
                     <div className="flex flex-col py-7 border-b border-b-black/8 ">
                         <h1 className="font-bold text-2xl text-zinc-950/88 leading-relaxed">$549.00 or 99.99/month</h1>
-                        <p className="font-medium text-sm text-black/60  ">a perfect balance of exhilarating.</p>
+                        <p className="font-medium text-base text-black/60  ">a perfect balance of exhilarating.</p>
                     </div>
                     <div className="flex flex-col py-7 border-b border-b-black/8 gap-3 ">
                         <h1 className="font-bold text-2xl text-zinc-950/88 leading-relaxed">Choose a Color</h1>
@@ -99,6 +102,40 @@ export default function ProductPage() {
 
                         </div>
                     </div>
+                    <div className=" py-7 border-b border-b-black/8  flex items-center  ">
+
+                        <div className="grid grid-cols-3 aspect-3.75/1 w-38 bg-black/3 rounded-full ">
+                            <button className={clsx("flex items-center justify-center w-full h-full text-xl cursor-pointer scale-130 hover:scale-170 transition-all duration-300 "
+                                ,countProduct === 1 ? "opacity-40":"opacity-100"
+                            )}
+                                onClick={() => setCountProduct((prev) => {
+                                    if(prev > 1) {
+                                        return prev-1
+                                    }
+                                    return prev
+                                })}
+                            >-</button>
+                            <div className="flex items-center justify-center w-full h-full text-base ">{countProduct}</div>
+                            <button className={clsx("flex items-center justify-center w-full h-full text-xl cursor-pointer scale-130 hover:scale-170 transition-all duration-300 "
+                                ,countProduct === limitCountProduct ? "opacity-40":"opacity-100"
+                            )}
+                            onClick={() => setCountProduct((prev) => {
+                                if(prev < limitCountProduct) {
+                                    return prev + 1
+                                }
+                                return prev
+                            })}
+
+                            >+</button>
+
+                        </div>
+
+
+
+
+                    </div>
+
+
 
 
                 </div>

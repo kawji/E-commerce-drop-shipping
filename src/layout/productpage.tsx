@@ -9,6 +9,15 @@ import ButtonCount from "@/app/products/[id]/_components/buttonCount"
 import { Truck,Album } from 'lucide-react';
 import TagProduct from "@/app/products/[id]/_components/tagProduct"
 import { TagProductType } from "@/app/products/[id]/type/typeTag"
+import Link from "next/link"
+
+
+
+
+
+
+
+
 
 export default function ProductPage() {
     const [currentColor,setCurrentColor] = useState("red");
@@ -125,7 +134,7 @@ export default function ProductPage() {
                         </div>
 
                         <div className="flex items-center gap-5 ">
-                            <button className="flex items-center justify-center px-18 py-2.75 rounded-full bg-[#0f3612] text-zinc-100/90 hover:bg-[#0f3612e5] transition-all duration-300 cursor-pointer  ">Buy Now</button>
+                            <Link href={'/checkout'} className="flex items-center justify-center px-18 py-2.75 rounded-full bg-[#0f3612] text-zinc-100/90 hover:bg-[#0f3612e5] transition-all duration-300 cursor-pointer  ">Buy Now</Link>
                             <button className="flex items-center justify-center px-18 py-2.75 rounded-full bg-zinc-50 border border-[#0f3612a4] text-[#0f3612a4] hover:bg-zinc-200/45 transition-all duration-300 cursor-pointer  ">Add to Cart</button>
                         </div>
                     
@@ -143,6 +152,7 @@ export default function ProductPage() {
                                     word3={i.word3} 
                                     underword3={i.underword3} 
                                     space={i.space}
+                                    key={i.section}
                                     />
                                 )
                             })}

@@ -34,14 +34,14 @@ export default function TagProduct({
         <Icon className="text-yellow-600 " size={22}  />
         <div className="flex flex-col ">
             <p className=" text-zinc-950/90 font-semibold text-sm leading-relaxed">{section}</p>
-            <p className={clsx(" text-[12px] text-zinc-950/67 font-medium flex items-center  ",space)}> 
+            <div className={clsx(" text-[12px] text-zinc-950/67 font-medium flex items-center  ",space)}> 
                 <p>{word1}</p>  
                 <p className='underline cursor-pointer hover:text-zinc-950/57'>{underword1}</p>  
                 <p>{word2}</p>  
                 <p className='underline cursor-pointer hover:text-zinc-950/57'>{underword2}</p>  
                 <p>{word3}</p>  
                 <p className='underline cursor-pointer hover:text-zinc-950/57'>{underword3}</p>  
-            </p>
+            </div>
         </div>
     </div>
     )

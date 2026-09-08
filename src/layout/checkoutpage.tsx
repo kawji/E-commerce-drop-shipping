@@ -1,12 +1,17 @@
 
-
+'use client'
 
 import Navbar from "@/components/navbar"
 import Image from "next/image"
 import SectonInformation from "@/app/checkout/_components/sectionsInformation"
-
+import { useState } from "react"
+import RadioPay from "@/app/checkout/_components/radioPay"
 
 export default function CheckoutLayoutPage() {
+
+    const [checkout,setCheckout] = useState('delivery')
+
+    console.log("----->", checkout)
 
     return(
         <div className="flex flex-col pb-50 w-full  items-center text-zinc-950/90 ">
@@ -78,6 +83,12 @@ export default function CheckoutLayoutPage() {
                         </div>
                         <div className=" flex flex-col items-start gap-3 justify-start w-full py-4 border-t border-t-black/6 ">
                             <div className="text-xl font-bold leading-relaxed w-full ">Payment Details</div>
+
+                            <RadioPay currentPay={checkout} section="Cash on Delivery" setCurrentPay={setCheckout} value="delivery" />
+                            <RadioPay currentPay={checkout} section="Shopcart Card" setCurrentPay={setCheckout} value="card" />
+                            <RadioPay currentPay={checkout} section="Paypal" setCurrentPay={setCheckout} value="paypal" />
+                            <RadioPay currentPay={checkout} section="Cash on Delivery" setCurrentPay={setCheckout} value="delivery" />
+
 
                         </div>
 

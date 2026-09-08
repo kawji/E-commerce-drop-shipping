@@ -11,9 +11,9 @@ export default function CheckoutLayoutPage() {
     return(
         <div className="flex flex-col pb-50 w-full  items-center text-zinc-950/90 ">
             <Navbar />
-            <div className="flex flex-row items-start justify-center w-full max-w-380  gap-5 xl:px-18 lg:px-13 px-10 ">
+            <div className="flex flex-row items-start justify-center w-full max-w-380 border  gap-5 xl:px-18 lg:px-13 px-10 ">
 
-                <div className="flex flex-col items-center  w-full max-w-170 h-250 pt-8  gap-5 ">
+                <div className="flex flex-col items-center  w-full max-w-170 pt-8  gap-5 ">
                     
                     <div className="flex flex-col w-full  border border-black/6  shadow-2xs rounded-md bg-zinc-50 px-7 py-5 gap-5 ">
                         <h1 className=" font-semibold text-2xl text-zinc-950/92 ">Review Item And Shipping</h1>
@@ -61,7 +61,28 @@ export default function CheckoutLayoutPage() {
                     </div>
 
                 </div>
-                <div className=" flex w-[30%] bg-amber-100/40 h-250 border ">
+                <div className=" flex w-full max-w-105 bg-amber-100/40 h-250 border pt-8 ">
+                    <div className=" flex flex-col w-full items-start  px-7 py-5 bg-zinc-50 border border-black/6 rounded-md text-zinc-950/90 gap-0 ">
+                        <h1 className=" text-2xl font-bold   ">Order Summery</h1>
+                        <div className=" relative w-full flex items-center  py-7 border-t border-t-black/6 mt-4">
+                            <input 
+                            type="text" 
+                            name="" 
+                            id="" 
+                            placeholder="EnterCoupon Code" 
+                            className="px-4.5 py-3 w-full rounded-full text-[13px] bg-black/4 outline-none " 
+                            />
+                            <button className="absolute right-1.5 top-1/2 -translate-y-1/2 px-4 py-1.5 flex items-center justify-center rounded-full bg-[#0f3612de] text-zinc-50/90 cursor-pointer text-[13px] font-medium  ">
+                                Apply coupon
+                            </button>
+                        </div>
+                        <div className=" flex flex-col items-start gap-3 justify-start w-full py-4 border-t border-t-black/6 ">
+                            <div className="text-xl font-bold leading-relaxed w-full ">Payment Details</div>
+
+                        </div>
+
+
+                    </div>
 
                 </div>
             </div>

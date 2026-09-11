@@ -6,6 +6,7 @@ import Image from "next/image"
 import SectonInformation from "@/app/checkout/_components/sectionsInformation"
 import { useState } from "react"
 import RadioPay from "@/app/checkout/_components/radioPay"
+import VisaIcon from "@/icons/visa"
 
 export default function CheckoutLayoutPage() {
 
@@ -16,11 +17,11 @@ export default function CheckoutLayoutPage() {
     return(
         <div className="flex flex-col pb-50 w-full  items-center text-zinc-950/90 ">
             <Navbar />
-            <div className="flex flex-row items-start justify-center w-full max-w-380 border  gap-5 xl:px-18 lg:px-13 px-10 ">
+            <div className="flex flex-row items-start justify-center w-full max-w-380  gap-5 xl:px-18 lg:px-13 px-10 ">
 
                 <div className="flex flex-col items-center  w-full max-w-170 pt-8  gap-5 ">
                     
-                    <div className="flex flex-col w-full  border border-black/6  shadow-2xs rounded-md bg-zinc-50 px-7 py-5 gap-5 ">
+                    <div className="flex flex-col w-full border border-black/6  shadow-xs rounded-md bg-zinc-50 px-7 py-5 gap-5 ">
                         <h1 className=" font-semibold text-2xl text-zinc-950/92 ">Review Item And Shipping</h1>
                         <div className=" flex items-center gap-5 ">
                             <div className="flex items-center w-35 bg-black/4  justify-center rounded overflow-hidden relative h-full aspect-square ">
@@ -66,7 +67,7 @@ export default function CheckoutLayoutPage() {
                     </div>
 
                 </div>
-                <div className=" flex w-full max-w-105 bg-amber-100/40 h-250 border pt-8 ">
+                <div className=" flex w-full max-w-105 pt-8 ">
                     <div className=" flex flex-col w-full items-start  px-7 py-5 bg-zinc-50 border border-black/6 rounded-md text-zinc-950/90 gap-0 ">
                         <h1 className=" text-2xl font-bold   ">Order Summery</h1>
                         <div className=" relative w-full flex items-center  py-7 border-t border-t-black/6 mt-4">
@@ -87,10 +88,22 @@ export default function CheckoutLayoutPage() {
                             <RadioPay currentPay={checkout} section="Cash on Delivery" setCurrentPay={setCheckout} value="delivery" />
                             <RadioPay currentPay={checkout} section="Shopcart Card" setCurrentPay={setCheckout} value="card" />
                             <RadioPay currentPay={checkout} section="Paypal" setCurrentPay={setCheckout} value="paypal" />
-                            <RadioPay currentPay={checkout} section="Cash on Delivery" setCurrentPay={setCheckout} value="delivery" />
+                        </div>
+                        <div className=" flex flex-row  items-center mt-0 gap-2 ">
+
+                            <div className=" flex items-center justify-centerpy-2 h-8.5 w-18 px-2.5 py-2.5 bg-black/4 rounded-sm border border-green-700/0 ">
+                                <VisaIcon className="text-blue-800 w-auto   " />
+                            </div>
+                            <div className=" flex items-center justify-centerpy-2 h-8.5 w-18 px-2.5 py-2.5 bg-black/4 rounded-sm border border-green-700/70 ">
+                                <VisaIcon className="text-blue-800 w-auto   " />
+                            </div>
+                            <div className=" flex items-center justify-centerpy-2 h-8.5 w-18 px-2.5 py-2.5 bg-black/4 rounded-sm border border-green-700/0 ">
+                                <VisaIcon className="text-blue-800 w-auto   " />
+                            </div>
 
 
                         </div>
+                        
 
 
                     </div>

@@ -1,16 +1,31 @@
 
 'use client'
 
+import { type LucideIcon } from 'lucide-react';
 import Navbar from "@/components/navbar"
 import Image from "next/image"
 import SectonInformation from "@/app/checkout/_components/sectionsInformation"
 import { useState } from "react"
 import RadioPay from "@/app/checkout/_components/radioPay"
 import VisaIcon from "@/icons/visa"
+import ItemPay from "@/app/checkout/_components/itemPay"
+import { iconList ,type IconName } from '@/icons/iconsList';
+
+type ItemsPay = {
+    icon:IconName;
+    title:string;
+}
 
 export default function CheckoutLayoutPage() {
 
-    const [checkout,setCheckout] = useState('delivery')
+    const [checkout,setCheckout] = useState('delivery');
+    const [currentPay,setCurrentPay] = useState('visa');
+
+    const dataItemsPay:ItemsPay[] = [
+        {icon:'visa' ,title:"visa"},
+        {icon:'prom' ,title:"prompay"},
+        {icon:'credit' ,title:"credit"},
+    ]
 
     console.log("----->", checkout)
 
@@ -91,15 +106,11 @@ export default function CheckoutLayoutPage() {
                         </div>
                         <div className=" flex flex-row  items-center mt-0 gap-2 ">
 
-                            <div className=" flex items-center justify-centerpy-2 h-8.5 w-18 px-2.5 py-2.5 bg-black/4 rounded-sm border border-green-700/0 ">
-                                <VisaIcon className="text-blue-800 w-auto   " />
-                            </div>
-                            <div className=" flex items-center justify-centerpy-2 h-8.5 w-18 px-2.5 py-2.5 bg-black/4 rounded-sm border border-green-700/70 ">
-                                <VisaIcon className="text-blue-800 w-auto   " />
-                            </div>
-                            <div className=" flex items-center justify-centerpy-2 h-8.5 w-18 px-2.5 py-2.5 bg-black/4 rounded-sm border border-green-700/0 ">
-                                <VisaIcon className="text-blue-800 w-auto   " />
-                            </div>
+                            {dataItemsPay.map((i)=> {
+                                return(
+                                    <ItemPay icon={i.icon} title={i.title} currentSelect={currentPay} onCurrentSelect={setCurrentPay} />
+                                )
+                            })}
 
 
                         </div>

@@ -105,16 +105,13 @@ export default function CheckoutLayoutPage() {
                             <RadioPay currentPay={checkout} section="Paypal" setCurrentPay={setCheckout} value="paypal" />
                         </div>
                         <div className=" flex flex-row  items-center mt-0 gap-2 ">
-
                             {dataItemsPay.map((i)=> {
                                 return(
                                     <ItemPay icon={i.icon} title={i.title} currentSelect={currentPay} onCurrentSelect={setCurrentPay} />
                                 )
                             })}
-
-
                         </div>
-                        
+
 
 
                     </div>

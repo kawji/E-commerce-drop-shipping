@@ -37,7 +37,7 @@ export default function Feedpage() {
 
             <div className='max-w-380 relative h-55 sm:h-63 lg:h-77 w-full flex bg-amber-200/45 mt-1 lg:px-15 xl:px-18 '>
                 <div className='flex-1 flex flex-col items-center md:items-start text-center justify-center gap-5 lg:gap-8 md:pl-10 '>
-                    <h1 className='lg:text-5xl md:text-4xl text-[8vw] leading-none sm:text-5xl text-wrap md:text-nowrap text-[#0f3612] font-bold text-start '>Grab Upto 50% Off On <br/>Selected Headphone</h1>
+                    <h1 className='lg:text-5xl md:text-4xl text-[8vw] leading-none sm:text-5xl text-wrap md:text-nowrap text-[#0f3612] font-bold text-start '>{t("carousel-t-hero")} <br/>{t("carousel-b-hero")}</h1>
                     <button className='md:px-10 md:py-3 py-2.5 sm:px-8 px-6 text-sm md:text-base font-medium text-zinc-100/92 bg-[#0f3612] hover:bg-[#0f3612de] transition-colors rounded-4xl cursor-pointer '>Buy Now</button>
                 </div>
                 <div className='md:relative min-w-90  hidden lg:flex-1 shrink-0 md:flex items-center overflow-hidden '>

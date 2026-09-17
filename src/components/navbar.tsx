@@ -29,7 +29,7 @@ export default function Navbar() {
                         <p>+024 862 8685</p>
                     </div>
                     <div className='flex gap-2 items-center '>
-                        <p>{t('top-nav')}</p>      
+                        <p>{t('navigation.top-nav')}</p>      
                     </div>
                     <div className='flex items-center  gap-3'>
                         <div className='flex items-center gap-1'>
@@ -48,10 +48,10 @@ export default function Navbar() {
                     <BurgerIcon className='flex lg:hidden w-5 h-5 mr-5 cursor-pointer hover:text-black/75 ' />
                     <p className='text-2xl text-[#0f3612] font-bold lg:mr-8 xl:mr-15 2xl:mr-25'>Shopcart</p>
                     <div className='hidden lg:flex shrink-0 items-center gap-5 2xl:gap-9 xl:gap-5  '>
-                        <Dropdown namesec={t("nav-sec1")} section={t("dropdown-sec1")} itemsCategories={databaseItems} />
-                        <BtnNormal namepages={"HomePage"} keytext={"nav-sec2"} />
-                        <BtnNormal namepages={"HomePage"} keytext={"nav-sec3"} />
-                        <BtnNormal namepages={"HomePage"} keytext={"nav-sec4"} />
+                        <Dropdown namesec={t("navigation.nav-sec1")} section={t("navigation.dropdown-sec1")} itemsCategories={databaseItems} />
+                        <BtnNormal namepages={"HomePage"} keytext={"navigation.nav-sec2"} />
+                        <BtnNormal namepages={"HomePage"} keytext={"navigation.nav-sec3"} />
+                        <BtnNormal namepages={"HomePage"} keytext={"navigation.nav-sec4"} />
 
                     </div>
 

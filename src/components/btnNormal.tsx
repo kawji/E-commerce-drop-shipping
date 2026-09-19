@@ -1,12 +1,10 @@
-
+'use client'
 import { useTranslations } from "use-intl"
 
 type Props = {
     namepages:string;
     keytext:string;
 }
-
-
 export default function BtnNormal({namepages="HomePage" ,keytext}:Props) {
     const t = useTranslations(namepages)
 

@@ -5,11 +5,17 @@ import BtnNormal from "./btnNormal"
 import BurgerIcon from "@/icons/burger"
 import AccountIcon from "@/icons/account"
 import { useTranslations } from "next-intl"
+import { useRouter } from "next/navigation"
+import { useState ,useRef ,useEffect } from "react"
+import clsx from "clsx"
 
 type databaseItemsType = [string,string,number][]
 
 export default function Navbar() {
+    const router = useRouter();
     const t = useTranslations('HomePage');
+    const [isOpenLang,setIsOpenLang] = useState(false);
+    const refLang = useRef<HTMLDivElement>(null);
 
     const databaseItems:databaseItemsType = [
         ['/itemHeadphone.jpg',"Headphone",240],
@@ -19,10 +25,34 @@ export default function Navbar() {
         ['/itemHeadphone.jpg',"phone",150],
         ['/itemHeadphone.jpg',"Mouse",90]
     ]
+    const handleLocaleChange = (nextLocale: 'en' | 'th') => {
+        // บันทึกภาษาลง Cookie ให้มีอายุ 1 ปี
+        document.cookie = `NEXT_LOCALE=${nextLocale}; path=/; max-age=31536000; SameSite=Lax`;
+        router.refresh()
+    };
+
+    const handleClickLang = (nextLocale: 'en' | 'th') => {
+        handleLocaleChange(nextLocale);
+        setIsOpenLang(false);
+    }
+
+    useEffect(() => {
+        const handleCloseLang = (e: MouseEvent) => {
+            if(refLang.current && !refLang.current.contains(e.target as Node) ) {
+                setIsOpenLang(false);
+            }
+        }
+        document.addEventListener('mousedown',handleCloseLang)
+        return () => {
+            document.removeEventListener('mousedown' ,handleCloseLang)
+        }
+    },[])
+    
+    
 
     return(
         <>
-            <nav className="flex item-center justify-center w-full bg-[#0f3612] ">
+            <nav className="z-11 flex item-center justify-center w-full bg-[#0f3612] ">
                 <div className='hidden lg:flex items-center justify-between w-full max-w-380 xl:mx-18 lg:mx-13 mx-10 py-2 text-white/83 text-[12px] lg:text-[13px] '>
                     <div className='flex gap-2 items-center '>
                         <Phone size={15} />
@@ -32,14 +62,24 @@ export default function Navbar() {
                         <p>{t('navigation.top-nav')}</p>      
                     </div>
                     <div className='flex items-center  gap-3'>
-                        <div className='flex items-center gap-1'>
-                            <p>Eng</p>
-                            <ChevronDown size={15} />
+                        <div ref={refLang} className='flex flex-col items-center gap-2 cursor-pointer   '>
+                            <div onClick={() => setIsOpenLang(true)} className="flex items-center justify-center gap-1">
+                                <p>Eng</p>
+                                <ChevronDown  size={15} />
+                            </div>
+                            <div className={clsx(" flex flex-col items-center bg-[#0f3612] absolute transition-all duration-100  "
+                                ,isOpenLang? 'opacity-100 scale-100 translate-y-7 pointer-events-auto ':'opacity-0 scale-0 translate-y-0 pointer-events-none ' 
+                                )}>
+                                <button  
+                                onClick={() => handleClickLang('en')} 
+                                className=" flex items-center min-w-25 px-2 py-1 font-medium cursor-pointer text-[13px] hover:bg-[#134d18] transition-colors ">Eng</button>
+                                <button  onClick={() => handleClickLang('th')} className=" flex items-center min-w-25 px-2 py-1 font-medium cursor-pointer text-[13px] hover:bg-[#134d18] transition-colors">ไทย</button>
+                            </div>
                         </div>
-                        <div className='flex items-center gap-1'>
+                        <button className='flex items-center gap-1'>
                             <p>Location</p>
                             <ChevronDown size={15} />
-                        </div>
+                        </button>
                     </div>
                 </div>
             </nav>

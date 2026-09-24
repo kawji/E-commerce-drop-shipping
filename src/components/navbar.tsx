@@ -4,10 +4,12 @@ import Dropdown from "./dropdown"
 import BtnNormal from "./btnNormal"
 import BurgerIcon from "@/icons/burger"
 import AccountIcon from "@/icons/account"
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 import { useRouter } from "next/navigation"
 import { useState ,useRef ,useEffect } from "react"
 import clsx from "clsx"
+import { DATA_LANGUAGES } from "@/config/language"
+
 
 type databaseItemsType = [string,string,number][]
 
@@ -16,6 +18,7 @@ export default function Navbar() {
     const t = useTranslations('HomePage');
     const [isOpenLang,setIsOpenLang] = useState(false);
     const refLang = useRef<HTMLDivElement>(null);
+    const cokiesLanguage = useLocale();
 
     const databaseItems:databaseItemsType = [
         ['/itemHeadphone.jpg',"Headphone",240],
@@ -48,7 +51,7 @@ export default function Navbar() {
         }
     },[])
     
-    
+    const currentLang = DATA_LANGUAGES.find(lang => lang.code === cokiesLanguage)?.language || "Eng";
 
     return(
         <>
@@ -64,16 +67,20 @@ export default function Navbar() {
                     <div className='flex items-center  gap-3'>
                         <div ref={refLang} className='flex flex-col items-center gap-2 cursor-pointer   '>
                             <div onClick={() => setIsOpenLang(true)} className="flex items-center justify-center gap-1">
-                                <p>Eng</p>
+                                <p>{currentLang}</p>
                                 <ChevronDown  size={15} />
                             </div>
                             <div className={clsx(" flex flex-col items-center bg-[#0f3612] absolute transition-all duration-100  "
                                 ,isOpenLang? 'opacity-100 scale-100 translate-y-7 pointer-events-auto ':'opacity-0 scale-0 translate-y-0 pointer-events-none ' 
                                 )}>
-                                <button  
-                                onClick={() => handleClickLang('en')} 
-                                className=" flex items-center min-w-25 px-2 py-1 font-medium cursor-pointer text-[13px] hover:bg-[#134d18] transition-colors ">Eng</button>
-                                <button  onClick={() => handleClickLang('th')} className=" flex items-center min-w-25 px-2 py-1 font-medium cursor-pointer text-[13px] hover:bg-[#134d18] transition-colors">ไทย</button>
+                                    {DATA_LANGUAGES.map((lang) => {
+                                        return(                               
+                                        <button  
+                                        key={lang.code}
+                                        onClick={() => handleClickLang(lang.code)} 
+                                        className=" flex items-center min-w-25 px-2 py-1 font-medium cursor-pointer text-[13px] hover:bg-[#134d18] transition-colors ">{lang.language}</button>
+                                        )
+                                    })}
                             </div>
                         </div>
                         <button className='flex items-center gap-1'>

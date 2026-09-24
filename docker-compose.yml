@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  # 1. ตั้งชื่อ Service ของเรา (ตั้งชื่ออะไรก็ได้ เช่น web หรือ app)
+  web-app:
+    # 2. บอกให้ Docker Compose ทำการ Build Image จาก Dockerfile ในโฟลเดอร์ปัจจุบัน (.)
+    build: .
+    
+    # 3. ตั้งชื่อ Image ที่จะถูกสร้างขึ้นมาอัตโนมัติ
+    image: my-compose-app:latest
+    
+    # 4. ตั้งชื่อกล่อง Container ให้จำง่าย
+    container_name: my-compose-container
+    
+    # 5. เชื่อมต่อพอร์ต (พอร์ตเครื่องคอม : พอร์ตในกล่อง Docker)
+    ports:
+      - "3000:3000"

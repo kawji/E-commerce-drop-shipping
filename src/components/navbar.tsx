@@ -55,8 +55,8 @@ export default function Navbar() {
 
     return(
         <>
-            <nav className="z-11 flex item-center justify-center w-full bg-[#0f3612] ">
-                <div className='hidden lg:flex items-center justify-between w-full max-w-380 xl:mx-18 lg:mx-13 mx-10 py-2 text-white/83 text-[12px] lg:text-[13px] '>
+            <nav className="z-11 flex items-center justify-center w-full bg-[#0f3612] ">
+                <div className='hidden lg:flex items-center justify-between w-full max-w-380 mx-4 sm:mx-10 lg:mx-13 xl:mx-18 py-2 text-white/83 text-xs lg:text-base '>
                     <div className='flex gap-2 items-center '>
                         <Phone size={15} />
                         <p>+024 862 8685</p>
@@ -83,10 +83,10 @@ export default function Navbar() {
                                     })}
                             </div>
                         </div>
-                        <button className='flex items-center gap-1'>
+                        <div className='flex items-center gap-1'>
                             <p>Location</p>
                             <ChevronDown size={15} />
-                        </button>
+                        </div>
                     </div>
                 </div>
             </nav>
@@ -103,14 +103,15 @@ export default function Navbar() {
                     </div>
 
                     <div className='flex items-center justify-end flex-1 gap-3 sm:gap-5 2xl:gap-9 xl:gap-5 text-black/80 lg:text-sm xl:text-base '>
-                        <div className='relative  flex items-center justify-center w-full ml-5 lg:ml-10 xl:ml-15  max-w-90'>
-                            <input 
-                            type="text"
-                            placeholder='Search Product' 
-                            className=' flex-1 outline-none text-sm bg-black/4 text-zinc-950/70 hidden sm:flex items-center px-5 py-2 rounded-2xl transition-all duration-300 ' 
-                            
+                        <div className='relative flex items-center justify-center sm:w-full sm:max-w-60 md:max-w-90 sm:ml-5'>
+                            <input
+                                type="text"
+                                placeholder='Search Product'
+                                className='w-full outline-none text-sm bg-black/4 text-zinc-950/70 hidden sm:flex items-center px-5 py-2 pr-10 rounded-2xl transition-all duration-300'
+                                suppressHydrationWarning={true}
                             />
-                            <SearchIcon className='absolute top-1/2 -translate-y-1/2 right-0 lg:right-2 text-black/90 sm:text-[#7F8487] '  />
+                            {/* บนมือถือไอคอนจะเป็นปุ่มเปล่าๆ ชิ้นหนึ่ง (ไม่ครอบ absolute ลอยทับ) พอจอใหญ่ขึ้นค่อยกลับไปครอบทับอินพุตด้านขวา */}
+                            <SearchIcon className='cursor-pointer text-black/90 sm:text-[#7F8487] sm:absolute sm:top-1/2 sm:-translate-y-1/2 sm:right-3 w-5 h-5' />
                         </div>
                         <button className='flex items-center justify-center shrink-0  gap-1 cursor-pointer hover:text-shadow-neutral-950 hover:text-black/70 transition-all duration-300'>
                             <ShoppingCart className='' size={15} />

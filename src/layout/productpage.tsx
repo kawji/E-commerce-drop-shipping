@@ -31,10 +31,10 @@ export default function ProductPage() {
         <div className="flex flex-col items-center w-full pb-20 md:pb-32 2xl:pb-50 bg-zinc-50">
             <Navbar />
 
-            <div className="flex flex-col md:flex-row w-full max-w-380 mt-4 md:mt-8 px-4 sm:px-8 md:px-10 2xl:px-0 gap-8 md:gap-10 2xl:gap-16">
+            <div className="flex flex-col lg:flex-row w-full max-w-380 mt-4 md:mt-8 px-4 sm:px-8 md:px-10 2xl:px-0 gap-8 md:gap-10 2xl:gap-16">
                 
                 {/* ฝั่งซ้าย: รูปภาพสินค้า */}
-                <div className="flex flex-col w-full md:w-[35%] lg:w-[39%] gap-4 shrink-0">
+                <div className="flex flex-col w-full self-center max-w-150  lg:w-125   gap-4 shrink-0">
                     <div className="w-full relative flex items-center justify-center aspect-square sm:aspect-1.5/1.5 rounded-lg overflow-hidden bg-black/4 group hover:bg-black/7 cursor-zoom-in transition-all duration-300">
                         <Image
                             src={"/pg/headphone1-.png"}

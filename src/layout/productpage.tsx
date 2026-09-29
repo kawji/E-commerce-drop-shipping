@@ -10,6 +10,70 @@ import { Truck, Album } from 'lucide-react';
 import TagProduct from "@/app/products/[id]/_components/tagProduct"
 import { TagProductType } from "@/app/products/[id]/type/typeTag"
 import Link from "next/link"
+import ProductDescription from "@/components/ProductDescription"
+import ProductSpecifications, { ProductSpecification } from "@/components/ProductSpecifications"
+import RelatedProducts from "@/components/RelatedProducts"
+import RecommendedProducts from "@/components/RecommendedProducts"
+import ECommerceFooter from "@/components/ECommerceFooter"
+import { MiniProduct } from "@/components/ProductMiniCard"
+
+// ===== Mock Data (ข้อมูลสมมติสำหรับทดสอบ Reusable Components) =====
+// สังเกตุ: ข้อมูล description ใช้ \n (การขึ้นบรรทัดจริงใน Template Literal)
+// ProductDescription จะเรNDER ให้ขึ้นบรรทัดตรงตามนี้ด้วย whitespace-pre-line
+const MOCK_DESCRIPTION = `ไฮไลท์
+
+Apple AirPods Max หุ้ฟหู Over-Ear ที่สมดุลงน้ำระหว่องเสียงคุณภาพสูง และความสบายในการสวมใส่ที่ไม่เหมือนใคร
+
+- Dynamic Head Tracking สำหรับประสบการณ์เสียงแบบ Spatial Audio
+- Active Noise Cancellation (ANC) ตัดเสียงรอบข້างได้อัตโนมัติ
+- Transparency Mode ได้ยินเสียงแวดล้อมอย่างเป็นธรรมชาติ
+- Adaptive EQ จูนเสียงแบบเรียลไทม์ตามรูปทรงหุ้ฟหูของแต่ละคน
+- แบตเตอรี่ใช้งานได้สูงสุด 20 ชั่วโมง ต่อการชาร์จ 1 ครั้ง
+- ชิป H1 ประมวลผลเสียงได้สูงสุด 900 ล้านครั้่งต่อวินาที
+
+การเชื่อมต่อ
+- Bluetooth 5.0 รัศมีใช้งานประมาณ 10 เมตร
+- จับคู่อัตโนมัติกับอุปกรณ์ Apple ทั้งหมด
+
+ในกล่อง
+- AirPods Max
+- Smart Case
+- สาย Lightning to USB-C Cable
+- เอกสารประกอบและใบรับประกัน`
+
+// ข้อมูลจำเพาะ (Specifications) โครงสร้างเดียวกับที่ Admin จะส่งมาให้ในอนาคต
+const MOCK_SPECS: ProductSpecification[] = [
+    { label: "Brand", value: "Apple" },
+    { label: "Model", value: "AirPods Max" },
+    { label: "Weight", value: "384.7 g" },
+    { label: "Driver", value: "45mm dynamic driver" },
+    { label: "Battery Life", value: "Up to 20 hours (ANC on)" },
+    { label: "Connectivity", value: "Bluetooth 5.0" },
+    { label: "Chip", value: "Apple H1 (2 chips)" },
+    { label: "Warranty", value: "1 year" },
+]
+
+// id ของสินค้าที่แสดงอยู่ในหน้านี้ (ทดสอบเงื่อนไขไม่แสดงสินค้าซ้ำใน RelatedProducts)
+const CURRENT_PRODUCT_ID = "1"
+
+// สินค้าหมวดหมู่เดียวกัน (Headphones) — Mock Data สำหรับทดสอบ RelatedProducts
+// สังเกต: มี id "1" (สินค้าปัจจุบัน) ปนอยู่ เพื่อทดสอบว่า Component กรองออก
+const MOCK_RELATED_PRODUCTS: MiniProduct[] = [
+    { id: "1", name: "AirPods Max", price: 549.00, image: "/pg/headphone1-.png", rating: 4.8 },
+    { id: "2", name: "Sony WH-1000XM5 Wireless Noise Cancelling Headphones", price: 399.99, image: "/pg/headphone1.jpg", rating: 4.9 },
+    { id: "3", name: "Bose QuietComfort Ultra Headphones", price: 429.00, image: "/pg/headphonegire.png", rating: 4.7 },
+    { id: "4", name: "Sennheiser Momentum 4 Wireless Headphones", price: 349.95, image: "/itemHeadphone.jpg", rating: 4.6 },
+    { id: "5", name: "JBL Tour One M2 Over-Ear Headphones", price: 299.95, image: "/pg/headphone1-.png", rating: 4.5 },
+]
+
+// สินค้าแนะนำคละหมวดหมู่ (เรตติ้ง >= 4.5) — Mock Data สำหรับทดสอบ RecommendedProducts
+const MOCK_RECOMMENDED_PRODUCTS: MiniProduct[] = [
+    { id: "101", name: "Apple iPhone 15 Pro Max 256GB Natural Titanium", price: 1299.00, image: "/pg/headphone1.jpg", rating: 4.9 },
+    { id: "102", name: "Apple Watch Series 9 GPS 45mm Aluminium Case", price: 429.00, image: "/pg/headphonegire.png", rating: 4.7 },
+    { id: "103", name: "iPad Air 11-inch M2 128GB Wi-Fi", price: 599.00, image: "/itemHeadphone.jpg", rating: 4.8 },
+    { id: "104", name: "MacBook Air 13-inch M3 8GB 256GB SSD", price: 1099.00, image: "/pg/headphone1-.png", rating: 4.9 },
+    { id: "105", name: "Sony WF-1000XM5 True Wireless Earbuds", price: 329.99, image: "/pg/headphone1.jpg", rating: 4.6 },
+]
 
 export default function ProductPage() {
     const [currentColor, setCurrentColor] = useState("red");
@@ -28,7 +92,7 @@ export default function ProductPage() {
     ]
 
     return (
-        <div className="flex flex-col items-center w-full pb-20 md:pb-32 2xl:pb-50 bg-zinc-50">
+        <div className="flex flex-col items-center w-full bg-zinc-50">
             <Navbar />
 
             <div className="flex flex-col w-full max-w-380 mt-4 md:mt-8 px-4 sm:px-8 md:px-10 2xl:px-0 ">
@@ -122,55 +186,36 @@ export default function ProductPage() {
 
 
 
-                <div className="flex flex-col gap-6 text-black/90 w-full mt-8 px-6 py-10 bg-zinc-50 shadow-xs border border-black/5 rounded ">
+                <div className="flex flex-col gap-8 text-black/90 w-full mt-18 px-6 py-10 bg-zinc-50 shadow-xs border border-black/5 rounded ">
                     <div className="flex flex-col w-full text-base text-black/70 bg-black/0 py-3 ">
                         This product has no reviews yet.
                     </div>
 
-                    <div className="flex flex-col w-full gap-3 ">
-                        <div className="w-full flex items-center text-2xl font-semibold border-b border-b-black/10 pb-3 ">Product Details</div>
-                        <div className="flex flex-col w-full py-3 ">
-                            <div className="w-full text-sm font-medium  ">
-                                ไฮไลท์<br/><br/>
-                                Aconatic ทีวี 24 นิ้ว LED HD Digital TV รุ่น 24HD523AN ดิจิตอลทีวี (รับประกัน 1 ปี) <br/>
-                                    ขนาดหน้าจอ (นิ้ว) : 24 <br/>
-                                    Resolution : HD 1366 x 768  <br/>
-                                    Brightness (Typ) : 150cd/m2 <br/>
-                                    Contrast Ratio(Min/Typ)  : 800:1 <br/>
-                                    Response Time : 8ms <br/>
-                                    Audio Power : 3W x2 <br/>
-                                    Power Supply : 100V-240V, 50/60Hz <br/>
-                                    การใช้พลังงาน (โหมด ON/มาตรฐาน) : 40W <br/>
-                                    การใช้พลังงาน (สแตนด์บาย) : 0.50W <br/>
-                                    ขนาดสินค้า (กว้าง x ยาว x สูง) : 550 x 147 x 365 mm. <br/>
-                                    น้ำหนักสินค้า : 4.1 kg. <br/>
-                                    ขนาดรวมแพ็คเกจ : 600 x 102 x 395 mm. <br/>
-                                    น้ำหนักรวมแพ็คเกจ : 5.6 kg. <br/>
-                                    HDMI : 1 <br/>
-                                    USB : 1 <br/>
-                                    RF : 1 <br/>
-                                    CVBS/AUDIO IN : 1 <br/>
-                                    Optical : 1 <br/>
-                                    Earphone (3.5mm) : 1 <br/>
-                            </div>
+                    {/* Reusable Component: รายละเอียดทั่วไป (รองรับ \n ด้วย whitespace-pre-line) */}
+                    <ProductDescription description={MOCK_DESCRIPTION} />
 
-                        </div>
-                    </div>
-                    
+                    {/* Reusable Component: ข้อมูลจำเพาะ (Array<{ label, value }>) */}
+                    <ProductSpecifications specs={MOCK_SPECS} />
 
                 </div>
 
+                {/* Reusable Component: สินค้าหมวดหมู่เดียวกัน (กรองสินค้าปัจจุบันออกอัตโนมัติ) */}
+                <RelatedProducts
+                    products={MOCK_RELATED_PRODUCTS}
+                    currentProductId={CURRENT_PRODUCT_ID}
+                    className="mt-16"
+                />
 
-
-
-
-
-
-
-
-
+                {/* Reusable Component: สินค้าแนะนำทั่วไป */}
+                <RecommendedProducts
+                    products={MOCK_RECOMMENDED_PRODUCTS}
+                    className="mt-16"
+                />
 
             </div>
+
+            {/* Reusable Component: Footer ของเว็บไซต์ */}
+            <ECommerceFooter />
 
         </div>
     )

@@ -30,7 +30,7 @@ export default function ProductMiniCard({ id, name, price, image, rating }: Prod
             className="group flex flex-col w-full rounded-lg border border-black/6 bg-white overflow-hidden hover:shadow-md hover:scale-[1.02] transition-all duration-300 cursor-pointer"
         >
             {/* รปูภาพสินค้า */}
-            <div className="relative w-full aspect-1.3/1 bg-black/4">
+            <div className="relative w-full aspect-[1.3/1] bg-black/4">
                 <Image
                     src={image}
                     alt={name}

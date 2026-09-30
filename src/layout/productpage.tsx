@@ -16,6 +16,7 @@ import RelatedProducts from "@/components/RelatedProducts"
 import RecommendedProducts from "@/components/RecommendedProducts"
 import ECommerceFooter from "@/components/ECommerceFooter"
 import { MiniProduct } from "@/components/ProductMiniCard"
+import ProductReviews, { ProductReview } from "@/components/ProductReviews"
 
 // ===== Mock Data (ข้อมูลสมมติสำหรับทดสอบ Reusable Components) =====
 // สังเกตุ: ข้อมูล description ใช้ \n (การขึ้นบรรทัดจริงใน Template Literal)
@@ -73,6 +74,55 @@ const MOCK_RECOMMENDED_PRODUCTS: MiniProduct[] = [
     { id: "103", name: "iPad Air 11-inch M2 128GB Wi-Fi", price: 599.00, image: "/itemHeadphone.jpg", rating: 4.8 },
     { id: "104", name: "MacBook Air 13-inch M3 8GB 256GB SSD", price: 1099.00, image: "/pg/headphone1-.png", rating: 4.9 },
     { id: "105", name: "Sony WF-1000XM5 True Wireless Earbuds", price: 329.99, image: "/pg/headphone1.jpg", rating: 4.6 },
+]
+
+// ข้อมูลรีวิวสมมตติ — สำหรบั ทดสอบ ProductReviews
+// สังเกต: attributes เป็็น key-value ยืดหยุ่น (สสี, การรบั ประกัน, ชองตอ่ ฯลฯ) และมรีีวิวทไี่ ม่มี attribute เพอื ทดสอบกรณวีา่ง
+const MOCK_REVIEWS: ProductReview[] = [
+    {
+        id: "r1",
+        userName: "Somchai Jaidee",
+        createdAt: "2026-09-12T10:30:00Z",
+        rating: 5,
+        attributes: [
+            { name: "Color", value: "Midnight Black" },
+            { name: "Warranty", value: "1 Year" },
+        ],
+        comment: "เสยี งดีมาก ANC ตัดเสยี งรอบขา้งไดเ้ นียนมาก\nใสท่ ำงานทัง้ วันไมป่ วดหู คุม้ ค่าราคาครับ",
+        likes: 128,
+        isVerified: true,
+    },
+    {
+        id: "r2",
+        userName: "Jane D.",
+        createdAt: "2026-09-05T08:15:00Z",
+        rating: 4,
+        attributes: [
+            { name: "Color", value: "Sky Blue" },
+            { name: "Connector", value: "USB-C" },
+        ],
+        comment: "Sound quality is superb, spatial audio is impressive.\nBattery could be better for the price though.",
+        likes: 56,
+        isVerified: true,
+    },
+    {
+        id: "r3",
+        userName: "Mook KP",
+        createdAt: "2026-08-28T14:45:00Z",
+        rating: 5,
+        attributes: [{ name: "Color", value: "Green" }],
+        comment: "สที ี่เขียวสวยมาก มาพรอ้ มเคสกนั กระแทกไดด้ ี สง่ เรว็ มากค่ะ",
+        likes: 33,
+    },
+    {
+        id: "r4",
+        userName: "Guest Buyer",
+        createdAt: "2026-08-20T19:05:00Z",
+        rating: 3,
+        attributes: [],
+        comment: "สนิ ค้าปกติดี แตเ่ สยี งเบสไมแ่ นน่ เท่าทคี่ ิด",
+        likes: 7,
+    },
 ]
 
 export default function ProductPage() {
@@ -187,9 +237,8 @@ export default function ProductPage() {
 
 
                 <div className="flex flex-col gap-8 text-black/90 w-full mt-18 px-6 py-10 bg-zinc-50 shadow-xs border border-black/5 rounded ">
-                    <div className="flex flex-col w-full text-base text-black/70 bg-black/0 py-3 ">
-                        This product has no reviews yet.
-                    </div>
+                    {/* Reusable Component: ส่วนรีวิิวสืนคา (Lazada-style, likes = useState ชั่ัวคราว) */}
+                    <ProductReviews reviews={MOCK_REVIEWS} />
 
                     {/* Reusable Component: รายละเอียดทั่วไป (รองรับ \n ด้วย whitespace-pre-line) */}
                     <ProductDescription description={MOCK_DESCRIPTION} />

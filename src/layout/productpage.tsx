@@ -24,8 +24,7 @@ import {
 
 export default function ProductPage() {
     const [currentColor, setCurrentColor] = useState("red");
-    const [limitCountProduct, setLimitCountProduct] = useState(12);
-
+    const [limitCountProduct] = useState(12);
     return (
         <div className="flex flex-col items-center w-full bg-zinc-50">
             <Navbar />
@@ -94,6 +93,7 @@ export default function ProductPage() {
 
                         {/* ตัวเลือกจำนวน */}
                         <div className="flex flex-col py-5 md:py-7 gap-5">
+
                             <div className="flex items-center gap-6 md:gap-10">
                                 <ButtonCount limit={limitCountProduct} />
                                 <div className="flex flex-col text-xs md:text-sm font-medium text-zinc-950/90">
@@ -102,7 +102,7 @@ export default function ProductPage() {
                                         <p className="text-yellow-600/90 font-semibold">{limitCountProduct} items</p>
                                         <p>Left!</p>
                                     </span>
-                                    <span className="text-black/50">Don't miss it</span>
+                                    <span className="text-black/50">Don’t miss it</span>
                                 </div>
                             </div>
 

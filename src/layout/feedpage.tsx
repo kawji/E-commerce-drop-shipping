@@ -27,7 +27,6 @@ export default function Feedpage() {
         {id:"headphone10",src:"/pg/headphone1-.png",section:"Bose BT Earphones",description:"Table with air purifier, stained venner/black",price:283,popular:120},
         {id:"headphon11",src:"/pg/headphone1-.png",section:"Bose BT Earphones",description:"Table with air purifier, stained venner/black",price:283,popular:120},
         {id:"headphone12",src:"/pg/headphone1-.png",section:"Bose BT Earphones",description:"Table with air purifier, stained venner/black",price:283,popular:120},
-        {id:"headphone13",src:"/pg/headphone1-.png",section:"Bose BT Earphones",description:"Table with air purifier, stained venner/black",price:283,popular:120},
     ]
 
     return(

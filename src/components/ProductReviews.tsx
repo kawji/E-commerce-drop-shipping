@@ -34,7 +34,7 @@ export interface ProductReview {
 }
 
 interface ProductReviewsProps {
-    reviews: ProductReview[];
+    reviews: readonly ProductReview[];
     title?: string;
     className?: string;
 }

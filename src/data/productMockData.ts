@@ -440,17 +440,15 @@ function toProductSummary(product: Product): ProductSummary {
 
 export const PRODUCT_SUMMARIES: readonly ProductSummary[] = PRODUCTS.map(toProductSummary)
 
-/**
- * Temporary projections retained for ProductMiniCard until its UI contract is
- * migrated in the next approved step. `price` is already stored as Cents.
- */
+/** Projection consumed by the compact product-card UI. Prices remain cents. */
 function toProductCardProjection(product: Product) {
     const summary = toProductSummary(product)
 
     return {
         id: summary.id,
         name: summary.name,
-        price: summary.priceCents,
+        priceCents: summary.priceCents,
+        currency: summary.currency,
         image: summary.primaryImageUrl,
         rating: summary.rating,
     }

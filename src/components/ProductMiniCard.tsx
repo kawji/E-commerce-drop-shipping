@@ -2,34 +2,42 @@ import Image from "next/image"
 import Link from "next/link"
 import Staricon from "@/icons/star"
 import clsx from "clsx"
+import { formatPrice } from "@/lib/formatPrice"
+import type { Cents, CurrencyCode } from "@/type/product"
 
 /**
- * โครงสร้างข้อมูลสินค้าแบบย่อ (สำหรับ Grid แสดงสินค้าแนะนำ/สินค้าคล้ายกัน)
- * Export ไว้เพื่อให้หน้าอื่่น (เช่น Admin หรือการดึงข้อมูลจาก API) ใช้ type เดียวกกันน้
+ * โครงสร้างข้อมูลสินค้าแบบย่อสำหรับรายการสินค้าแนะนำ/สินค้าคล้ายกัน
+ * ราคาใน UI adapter นี้ยังคงอยู่ในหน่วย cents ตาม contract ของสินค้า
  */
 export interface MiniProduct {
-    id: string;
-    name: string;
-    price: number;
-    image: string;
-    rating: number;
+    id: string
+    name: string
+    priceCents: Cents
+    currency: CurrencyCode
+    image: string
+    rating: number
 }
 
-interface ProductMiniCardProps extends MiniProduct {}
+type ProductMiniCardProps = MiniProduct
 
 /**
- * Product Card ขนาดย่อ (ใช้ร่วมกันระหว่าง RelatedProducts และ RecommendedProducts)
- * สไตลค์້างกบั card หน้า home ของโปรเจกต์
+ * Product Card ขนาดย่อใช้ร่วมกันระหว่าง RelatedProducts และ RecommendedProducts
  */
-export default function ProductMiniCard({ id, name, price, image, rating }: ProductMiniCardProps) {
-    const fullStars = Math.round(rating);
+export default function ProductMiniCard({
+    id,
+    name,
+    priceCents,
+    currency,
+    image,
+    rating,
+}: ProductMiniCardProps) {
+    const fullStars = Math.round(rating)
 
     return (
         <Link
             href={`/products/${id}`}
             className="group flex flex-col w-full rounded-lg border border-black/6 bg-white overflow-hidden hover:shadow-md hover:scale-[1.02] transition-all duration-300 cursor-pointer"
         >
-            {/* รปูภาพสินค้า */}
             <div className="relative w-full aspect-[1.3/1] bg-black/4">
                 <Image
                     src={image}
@@ -40,21 +48,20 @@ export default function ProductMiniCard({ id, name, price, image, rating }: Prod
                 />
             </div>
 
-            {/* ข้อมูลสินค้า */}
             <div className="flex flex-col gap-1.5 p-3">
                 <p className="text-sm font-semibold text-black/85 leading-snug line-clamp-2">
                     {name}
                 </p>
                 <p className="text-base font-bold text-[#0f3612]">
-                    ${price.toFixed(2)}
+                    {formatPrice(priceCents, currency)}
                 </p>
                 <div className="flex items-center gap-0.5">
-                    {[...Array(5)].map((_, i) => (
+                    {Array.from({ length: 5 }, (_, index) => (
                         <Staricon
-                            key={i}
+                            key={index}
                             className={clsx(
                                 "w-3.5 h-3.5",
-                                i < fullStars ? "text-green-500" : "text-black/12"
+                                index < fullStars ? "text-green-500" : "text-black/12",
                             )}
                         />
                     ))}
@@ -62,5 +69,5 @@ export default function ProductMiniCard({ id, name, price, image, rating }: Prod
                 </div>
             </div>
         </Link>
-    );
+    )
 }

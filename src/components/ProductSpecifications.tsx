@@ -1,17 +1,15 @@
-import clsx from "clsx";
+import clsx from "clsx"
+import type { ProductSpecification } from "@/type/product"
 
 /**
  * โครงสร้างข้อมูลจำเพาะ 1 รายการ (คู่ Label : Value)
  * Export ไว้เพื่อให้หน้า Admin (เพิ่มสินค้า) สามารถ import ไปกำหนด type ของ Form/Data ได้อย่างสะดวก
  */
-export interface ProductSpecification {
-    label: string;
-    value: string;
-}
+export type { ProductSpecification } from "@/type/product"
 
 interface ProductSpecificationsProps {
-    /** Array ของข้อมูลจำเพาะ เช่น [{ label: "Brand", value: "Apple" }, ...] */
-    specs: ProductSpecification[];
+    /** Array แบบ readonly ของข้อมูลจำเพาะ เช่น [{ label: "Brand", value: "Apple" }, ...] */
+    specs: readonly ProductSpecification[]
     /** หัวข้อของ section (ค่าเริ่มต้น: "Specifications") */
     title?: string;
     /** className เพิ่มเติมสำหรับปรับแต่งภายนอก */

@@ -1,67 +1,75 @@
 'use client'
 
-import Image from "next/image"
-import { useState } from "react"
+import Image from 'next/image'
+import Link from 'next/link'
+import { useState } from 'react'
 
-import Navbar from "@/components/navbar"
-import SectionInformation from "@/app/checkout/_components/sectionsInformation"
-import RadioPay from "@/app/checkout/_components/radioPay"
-import ItemPay from "@/app/checkout/_components/itemPay"
-import VariantOptions, {
-    type VariantOption,
-    formatPriceDelta,
-} from "@/app/checkout/_components/variantOptions"
-import { type IconName } from "@/icons/iconsList"
+import Navbar from '@/components/navbar'
+import SectionInformation from '@/app/checkout/_components/sectionsInformation'
+import RadioPay from '@/app/checkout/_components/radioPay'
+import ItemPay from '@/app/checkout/_components/itemPay'
+import { type IconName } from '@/icons/iconsList'
+import { useCart } from '@/context/CartContext'
+import { formatPrice } from '@/lib/formatPrice'
+import { PRODUCTS } from '@/data/productMockData'
+import type {
+    CartLineItem,
+    Product,
+    ProductVariant,
+} from '@/type/product'
+
+type DeliveryMethod = 'standard' | 'express'
+type PaymentMethod = 'cash' | 'card' | 'paypal'
+type PaymentProvider = 'visa' | 'prompay' | 'credit'
 
 type ItemsPay = {
     icon: IconName
-    title: string
+    title: PaymentProvider
 }
 
-const BASE_PRICE = 549
+type CheckoutItem = {
+    lineItem: CartLineItem
+    product: Product
+    variant: ProductVariant
+}
 
-/** Mock product upgrades used to exercise checkout's dynamic pricing. */
-const VARIANT_OPTIONS: readonly VariantOption[] = [
-    {
-        id: "standard",
-        label: "Standard Spec",
-        description: "Core i5 · 8GB RAM",
-        priceDelta: 0,
-    },
-    {
-        id: "pro",
-        label: "Pro Upgrade",
-        description: "Core i7 · 16GB RAM",
-        priceDelta: 149,
-    },
-    {
-        id: "max",
-        label: "Max Performance",
-        description: "Core i9 · 32GB RAM",
-        priceDelta: 349,
-    },
+const DELIVERY_METHODS: readonly {
+    value: DeliveryMethod
+    label: string
+}[] = [
+    { value: 'standard', label: 'Standard Delivery' },
+    { value: 'express', label: 'Express Delivery' },
 ]
 
-const DEFAULT_VARIANT = VARIANT_OPTIONS[0]!
+const PAYMENT_METHODS: readonly {
+    value: PaymentMethod
+    label: string
+}[] = [
+    { value: 'cash', label: 'Cash on Delivery' },
+    { value: 'card', label: 'Credit Card' },
+    { value: 'paypal', label: 'PayPal' },
+]
 
 const PAYMENT_ITEMS: readonly ItemsPay[] = [
-    { icon: "visa", title: "visa" },
-    { icon: "prom", title: "prompay" },
-    { icon: "credit", title: "credit" },
+    { icon: 'visa', title: 'visa' },
+    { icon: 'prom', title: 'prompay' },
+    { icon: 'credit', title: 'credit' },
 ]
 
 export default function CheckoutLayoutPage() {
-    const [checkout, setCheckout] = useState("delivery")
-    const [currentPay, setCurrentPay] = useState("visa")
-    const [selectedVariant, setSelectedVariant] = useState<VariantOption["id"]>(
-        DEFAULT_VARIANT.id,
-    )
+    const { cart, lineItems, removeFromCart, updateQuantity } = useCart()
+    const [deliveryMethod, setDeliveryMethod] = useState<DeliveryMethod>('standard')
+    const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('card')
+    const [paymentProvider, setPaymentProvider] = useState<PaymentProvider>('visa')
 
-    // Keep one source of truth for both the selected chip and order totals.
-    const activeVariant =
-        VARIANT_OPTIONS.find((option) => option.id === selectedVariant) ??
-        DEFAULT_VARIANT
-    const totalPrice = BASE_PRICE + activeVariant.priceDelta
+    const checkoutItems = lineItems.flatMap<CheckoutItem>((lineItem) => {
+        const product = PRODUCTS.find((candidate) => candidate.id === lineItem.productId)
+        const variant = product?.variants.find(
+            (candidate) => candidate.id === lineItem.variantId,
+        )
+
+        return product && variant ? [{ lineItem, product, variant }] : []
+    })
 
     return (
         <div className="flex w-full flex-col items-center pb-50 text-zinc-950/90">
@@ -74,43 +82,121 @@ export default function CheckoutLayoutPage() {
                             Review Item And Shipping
                         </h1>
 
-                        <div className="flex items-center gap-4 sm:gap-5">
-                            <div className="relative aspect-square flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded bg-black/4 sm:h-32 sm:w-32">
-                                <Image
-                                    src="/pg/headphone1-.png"
-                                    alt="AirPods Max in checkout"
-                                    fill
-                                    sizes="(max-width: 640px) 96px, 128px"
-                                    className="object-cover"
-                                />
+                        {checkoutItems.length === 0 ? (
+                            <div className="flex w-full flex-col items-center gap-3 rounded-md border border-dashed border-black/10 px-5 py-10 text-center">
+                                <p className="font-semibold text-zinc-950/80">Your cart is empty</p>
+                                <Link
+                                    href="/"
+                                    className="text-sm font-semibold text-[#0f3612] underline underline-offset-4"
+                                >
+                                    Continue shopping
+                                </Link>
                             </div>
+                        ) : (
+                            checkoutItems.map(({ lineItem, product, variant }) => {
+                                const image = product.images[0]
+                                const variantLabel =
+                                    variant.attributes.Color ?? variant.name
+                                const quantity = lineItem.quantity
 
-                            <div className="flex grow flex-col justify-center gap-2 self-stretch sm:flex-row sm:items-center sm:justify-between sm:gap-4">
-                                <div className="flex flex-col">
-                                    <h2 className="text-base font-semibold leading-tight text-zinc-950/90 sm:text-2xl sm:leading-relaxed">
-                                        Airpods-Max
-                                    </h2>
-                                    <p className="mt-0.5 text-xs font-medium text-black/45 sm:text-sm">
-                                        Color: Pink
-                                    </p>
-                                    <p className="mt-0.5 text-xs font-semibold text-[#0f3612] sm:text-sm">
-                                        {activeVariant.label}
-                                    </p>
-                                </div>
-
-                                <div className="mt-1 flex flex-row items-baseline justify-between gap-2 border-t border-black/5 pt-2 sm:mt-0 sm:flex-col sm:items-end sm:justify-center sm:border-none sm:pt-0">
-                                    <span
-                                        aria-live="polite"
-                                        className="text-base font-bold text-zinc-950/90 sm:text-xl"
+                                return (
+                                    <div
+                                        key={`${lineItem.productId}-${lineItem.variantId}`}
+                                        className="flex items-center gap-4 border-t border-black/5 pt-4 first:border-t-0 first:pt-0 sm:gap-5"
                                     >
-                                        ${totalPrice.toFixed(2)}
-                                    </span>
-                                    <span className="text-xs font-medium text-black/77 sm:text-sm">
-                                        Quantity: 01
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
+                                        <div className="relative aspect-square flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded bg-black/4 sm:h-32 sm:w-32">
+                                            {image ? (
+                                                <Image
+                                                    src={image.src}
+                                                    alt={`${product.name} in checkout`}
+                                                    fill
+                                                    sizes="(max-width: 640px) 96px, 128px"
+                                                    className="object-cover"
+                                                />
+                                            ) : (
+                                                <span className="text-xs text-black/40">No image</span>
+                                            )}
+                                        </div>
+
+                                        <div className="flex grow flex-col justify-center gap-2 self-stretch sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+                                            <div className="flex flex-col">
+                                                <h2 className="text-base font-semibold leading-tight text-zinc-950/90 sm:text-2xl sm:leading-relaxed">
+                                                    {product.name}
+                                                </h2>
+                                                <p className="mt-0.5 text-xs font-medium text-black/45 sm:text-sm">
+                                                    Variant: {variantLabel}
+                                                </p>
+                                                <p className="mt-0.5 text-xs font-medium text-black/45 sm:text-sm">
+                                                    SKU: {lineItem.sku}
+                                                </p>
+                                            </div>
+
+                                            <div className="mt-1 flex flex-row items-baseline justify-between gap-2 border-t border-black/5 pt-2 sm:mt-0 sm:flex-col sm:items-end sm:justify-center sm:border-none sm:pt-0">
+                                                <span
+                                                    aria-live="polite"
+                                                    className="text-base font-bold text-zinc-950/90 sm:text-xl"
+                                                >
+                                                    {formatPrice(
+                                                        lineItem.lineTotalCents,
+                                                        lineItem.currency,
+                                                    )}
+                                                </span>
+                                                <span className="text-xs font-medium text-black/77 sm:text-sm">
+                                                    Quantity: {String(quantity).padStart(2, '0')}
+                                                </span>
+                                                <div className="flex items-center gap-2">
+                                                    <button
+                                                        type="button"
+                                                        aria-label={`Decrease ${product.name} quantity`}
+                                                        disabled={quantity <= 1}
+                                                        onClick={() =>
+                                                            updateQuantity(
+                                                                lineItem.productId,
+                                                                lineItem.variantId,
+                                                                quantity - 1,
+                                                            )
+                                                        }
+                                                        className="h-6 w-6 rounded-full border border-black/10 text-sm disabled:cursor-not-allowed disabled:opacity-35"
+                                                    >
+                                                        −
+                                                    </button>
+                                                    <span className="min-w-4 text-center text-xs font-semibold">
+                                                        {quantity}
+                                                    </span>
+                                                    <button
+                                                        type="button"
+                                                        aria-label={`Increase ${product.name} quantity`}
+                                                        disabled={quantity >= variant.stockQuantity}
+                                                        onClick={() =>
+                                                            updateQuantity(
+                                                                lineItem.productId,
+                                                                lineItem.variantId,
+                                                                quantity + 1,
+                                                            )
+                                                        }
+                                                        className="h-6 w-6 rounded-full border border-black/10 text-sm disabled:cursor-not-allowed disabled:opacity-35"
+                                                    >
+                                                        +
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() =>
+                                                            removeFromCart(
+                                                                lineItem.productId,
+                                                                lineItem.variantId,
+                                                            )
+                                                        }
+                                                        className="ml-1 text-[11px] font-semibold text-red-700 underline underline-offset-2"
+                                                    >
+                                                        Remove
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )
+                            })
+                        )}
                     </section>
 
                     <section className="flex w-full flex-col gap-5 rounded-md border border-black/6 bg-zinc-50 p-4 shadow-2xs sm:px-7 sm:py-5">
@@ -140,6 +226,23 @@ export default function CheckoutLayoutPage() {
                                 data="georgia.young@example.com"
                             />
                         </div>
+
+                        <div className="flex w-full flex-col gap-3 border-t border-black/6 pt-4">
+                            <h2 className="text-base font-bold text-zinc-950/90 sm:text-lg">
+                                Delivery Method
+                            </h2>
+                            {DELIVERY_METHODS.map((method) => (
+                                <RadioPay
+                                    key={method.value}
+                                    currentPay={deliveryMethod}
+                                    setCurrentPay={(value) =>
+                                        setDeliveryMethod(value as DeliveryMethod)
+                                    }
+                                    value={method.value}
+                                    section={method.label}
+                                />
+                            ))}
+                        </div>
                     </section>
                 </div>
 
@@ -168,71 +271,50 @@ export default function CheckoutLayoutPage() {
                                 Payment Details
                             </div>
 
-                            <RadioPay
-                                currentPay={checkout}
-                                section="Cash on Delivery"
-                                setCurrentPay={setCheckout}
-                                value="delivery"
-                            />
-                            <RadioPay
-                                currentPay={checkout}
-                                section="Shopcart Card"
-                                setCurrentPay={setCheckout}
-                                value="card"
-                            />
-                            <RadioPay
-                                currentPay={checkout}
-                                section="Paypal"
-                                setCurrentPay={setCheckout}
-                                value="paypal"
-                            />
-
-                            <div className="mt-1 flex w-full flex-row flex-wrap items-center gap-2">
-                                {PAYMENT_ITEMS.map((item) => (
-                                    <ItemPay
-                                        key={item.title}
-                                        icon={item.icon}
-                                        title={item.title}
-                                        currentSelect={currentPay}
-                                        onCurrentSelect={setCurrentPay}
-                                    />
-                                ))}
-                            </div>
-
-                            {/* Product options are selected here and lifted to this parent state. */}
-                            <div className="mt-1 flex w-full flex-col gap-2.5 border-t border-black/6 pt-4">
-                                <div className="flex w-full items-center justify-between gap-3">
-                                    <span className="text-sm font-bold text-zinc-950/90 sm:text-base">
-                                        Product Options
-                                    </span>
-                                    <span className="text-xs font-semibold text-[#0f3612] sm:text-sm">
-                                        {activeVariant.label}
-                                    </span>
-                                </div>
-                                <VariantOptions
-                                    options={VARIANT_OPTIONS}
-                                    selectedId={selectedVariant}
-                                    onSelect={(id) => setSelectedVariant(id)}
+                            {PAYMENT_METHODS.map((method) => (
+                                <RadioPay
+                                    key={method.value}
+                                    currentPay={paymentMethod}
+                                    setCurrentPay={(value) =>
+                                        setPaymentMethod(value as PaymentMethod)
+                                    }
+                                    value={method.value}
+                                    section={method.label}
                                 />
-                            </div>
+                            ))}
+
+                            {paymentMethod === 'card' && (
+                                <div className="mt-1 flex w-full flex-row flex-wrap items-center gap-2">
+                                    {PAYMENT_ITEMS.map((item) => (
+                                        <ItemPay
+                                            key={item.title}
+                                            icon={item.icon}
+                                            title={item.title}
+                                            currentSelect={paymentProvider}
+                                            onCurrentSelect={(value) =>
+                                                setPaymentProvider(value as PaymentProvider)
+                                            }
+                                        />
+                                    ))}
+                                </div>
+                            )}
                         </div>
 
-                        {/* All totals derive from the selected option, so they update in real time. */}
                         <div
                             aria-live="polite"
                             className="flex w-full flex-col gap-2 border-t border-black/6 pt-4 text-sm"
                         >
                             <div className="flex w-full items-center justify-between font-medium text-black/60">
                                 <span>Subtotal</span>
-                                <span>${BASE_PRICE.toFixed(2)}</span>
+                                <span>{formatPrice(cart.subtotalCents, cart.currency)}</span>
                             </div>
                             <div className="flex w-full items-center justify-between font-medium text-black/60">
-                                <span>{activeVariant.label}</span>
-                                <span>{formatPriceDelta(activeVariant.priceDelta)}</span>
+                                <span>Shipping</span>
+                                <span>{formatPrice(cart.shippingCents, cart.currency)}</span>
                             </div>
                             <div className="flex w-full items-center justify-between border-t border-black/6 pt-2 text-base font-bold text-zinc-950/90 sm:text-lg">
                                 <span>Total</span>
-                                <span>${totalPrice.toFixed(2)}</span>
+                                <span>{formatPrice(cart.grandTotalCents, cart.currency)}</span>
                             </div>
                         </div>
 

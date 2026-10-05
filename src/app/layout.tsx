@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import clsx from "clsx";
 import {NextIntlClientProvider} from 'next-intl';
+import { CartProvider } from '@/context/CartContext';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,7 +30,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={clsx(geistSans.variable ,geistMono.variable,"h-full antialiased  ")}
     >
       <body className="min-h-full flex flex-col ">
-        <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        <CartProvider>
+          <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        </CartProvider>
       </body>
     </html>
   );

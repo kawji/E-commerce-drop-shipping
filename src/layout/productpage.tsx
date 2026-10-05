@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Navbar from '@/components/navbar'
 import Staricon from '@/icons/star'
@@ -14,6 +14,7 @@ import RecommendedProducts from '@/components/RecommendedProducts'
 import ECommerceFooter from '@/components/ECommerceFooter'
 import ProductReviews from '@/components/ProductReviews'
 import { formatPrice } from '@/lib/formatPrice'
+import { useCart } from '@/context/CartContext'
 import type { Product } from '@/type/product'
 import {
     CURRENT_PRODUCT,
@@ -26,11 +27,33 @@ type ProductPageProps = {
 }
 
 export default function ProductPage({ product = CURRENT_PRODUCT }: ProductPageProps) {
+    const router = useRouter()
+    const { addToCart } = useCart()
     const [currentColor, setCurrentColor] = useState(product.colors[0]?.id ?? '')
-    const [limitCountProduct] = useState(product.stockQuantity)
+    const [quantity, setQuantity] = useState(1)
     const primaryImage = product.images[0]
-    const defaultVariant = product.variants.find((variant) => variant.isDefault) ?? product.variants[0]
+    const defaultVariant =
+        product.variants.find((variant) => variant.isDefault) ?? product.variants[0]
+    const selectedColor = product.colors.find((color) => color.id === currentColor)
+    const selectedVariant =
+        product.variants.find(
+            (variant) =>
+                variant.attributes.Color?.toLowerCase() ===
+                selectedColor?.name.toLowerCase(),
+        ) ?? defaultVariant
+    const availableQuantity = selectedVariant?.stockQuantity ?? product.stockQuantity
     const financingOption = product.financingOptions?.[0]
+
+    const handleAddToCart = () => {
+        if (!selectedVariant || availableQuantity < 1) return
+        addToCart(product.id, selectedVariant.id, quantity)
+    }
+
+    const handleBuyNow = () => {
+        if (!selectedVariant || availableQuantity < 1) return
+        addToCart(product.id, selectedVariant.id, quantity)
+        router.push('/checkout')
+    }
 
     return (
         <div className="flex flex-col items-center w-full bg-zinc-50">
@@ -86,7 +109,7 @@ export default function ProductPage({ product = CURRENT_PRODUCT }: ProductPagePr
 
                         <div className="flex flex-col py-5 md:py-7 border-b border-b-black/8">
                             <h1 className="font-bold text-xl md:text-2xl text-zinc-950/88 leading-relaxed">
-                                {formatPrice(defaultVariant?.priceCents ?? product.basePriceCents, product.currency)}
+                                {formatPrice(selectedVariant?.priceCents ?? product.basePriceCents, product.currency)}
                                 {financingOption && ` or ${formatPrice(financingOption.amountCents, financingOption.currency)}/month`}
                             </h1>
                             <p className="font-medium text-xs md:text-base text-black/60">{product.shortDescription}</p>
@@ -112,11 +135,15 @@ export default function ProductPage({ product = CURRENT_PRODUCT }: ProductPagePr
 
                         <div className="flex flex-col py-5 md:py-7 gap-5">
                             <div className="flex items-center gap-6 md:gap-10">
-                                <ButtonCount limit={limitCountProduct} />
+                                <ButtonCount
+                                    limit={availableQuantity}
+                                    quantity={quantity}
+                                    onQuantityChange={setQuantity}
+                                />
                                 <div className="flex flex-col text-xs md:text-sm font-medium text-zinc-950/90">
                                     <span className="flex items-center gap-1">
                                         <p>Only </p>
-                                        <p className="text-yellow-600/90 font-semibold">{limitCountProduct} items</p>
+                                    <p className="text-yellow-600/90 font-semibold">{availableQuantity} items</p>
                                         <p>Left!</p>
                                     </span>
                                     <span className="text-black/50">Don’t miss it</span>
@@ -124,10 +151,20 @@ export default function ProductPage({ product = CURRENT_PRODUCT }: ProductPagePr
                             </div>
 
                             <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 md:gap-5 mt-2 w-full md:max-w-none 2xl:max-w-xl ">
-                                <Link href='/checkout' className="flex items-center justify-center w-full sm:flex-1 px-6 md:px-10 2xl:px-18 py-3 rounded-full bg-[#0f3612] text-zinc-100/90 hover:bg-[#0f3612e5] text-sm md:text-base font-semibold transition-all duration-300 cursor-pointer text-center">
+                                <button
+                                    type="button"
+                                    onClick={handleBuyNow}
+                                    disabled={!selectedVariant || availableQuantity < 1}
+                                    className="flex items-center justify-center w-full sm:flex-1 px-6 md:px-10 2xl:px-18 py-3 rounded-full bg-[#0f3612] text-zinc-100/90 hover:bg-[#0f3612e5] text-sm md:text-base font-semibold transition-all duration-300 cursor-pointer text-center disabled:cursor-not-allowed disabled:opacity-50"
+                                >
                                     Buy Now
-                                </Link>
-                                <button className="flex items-center justify-center w-full sm:flex-1 px-6 md:px-10 2xl:px-18 py-3 rounded-full bg-zinc-50 border border-[#0f3612a4] text-[#0f3612a4] hover:bg-zinc-200/45 text-sm md:text-base font-semibold transition-all duration-300 cursor-pointer">
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={handleAddToCart}
+                                    disabled={!selectedVariant || availableQuantity < 1}
+                                    className="flex items-center justify-center w-full sm:flex-1 px-6 md:px-10 2xl:px-18 py-3 rounded-full bg-zinc-50 border border-[#0f3612a4] text-[#0f3612a4] hover:bg-zinc-200/45 text-sm md:text-base font-semibold transition-all duration-300 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+                                >
                                     Add to Cart
                                 </button>
                             </div>

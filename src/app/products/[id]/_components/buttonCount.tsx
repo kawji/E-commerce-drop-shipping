@@ -1,39 +1,66 @@
+'use client'
 
-import { useState } from "react"
-import clsx from "clsx";
+import { useState } from 'react'
+import clsx from 'clsx'
 
 type Props = {
-    limit:number;
+    limit: number
+    quantity?: number
+    onQuantityChange?: (quantity: number) => void
 }
 
-export default function ButtonCount({limit}:Props) {
-    const [countProduct,setCountProduct] = useState(1);
+export default function ButtonCount({
+    limit,
+    quantity: controlledQuantity,
+    onQuantityChange,
+}: Props) {
+    const [internalQuantity, setInternalQuantity] = useState(1)
+    const quantity = Math.min(
+        Math.max(controlledQuantity ?? internalQuantity, 1),
+        Math.max(limit, 1),
+    )
 
-    return(
-    <div className="grid grid-cols-3 aspect-3.75/1.25 w-36 bg-black/5 rounded-full ">
-        <button className={clsx("flex items-center justify-center w-full h-full text-xl cursor-pointer scale-130 hover:scale-170 transition-all duration-300 "
-            ,countProduct === 1 ? "opacity-40":"opacity-100"
-        )}
-            onClick={() => setCountProduct((prev) => {
-                if(prev > 1) {
-                    return prev-1
-                }
-                return prev
-            })}
-        >-</button>
-        <div className="flex items-center justify-center w-full h-full text-base ">{countProduct}</div>
-        <button className={clsx("flex items-center justify-center w-full h-full text-xl cursor-pointer scale-130 hover:scale-170 transition-all duration-300 "
-            ,countProduct === limit ? "opacity-40":"opacity-100"
-        )}
-        onClick={() => setCountProduct((prev) => {
-            if(prev < limit) {
-                return prev + 1
-            }
-            return prev
-        })}
+    const updateQuantity = (nextQuantity: number) => {
+        const safeQuantity = Math.min(
+            Math.max(nextQuantity, 1),
+            Math.max(limit, 1),
+        )
+        setInternalQuantity(safeQuantity)
+        onQuantityChange?.(safeQuantity)
+    }
 
-        >+</button>
-
-    </div>
+    return (
+        <div className="grid grid-cols-3 aspect-3.75/1.25 w-36 bg-black/5 rounded-full">
+            <button
+                type="button"
+                aria-label="Decrease quantity"
+                disabled={quantity <= 1}
+                className={clsx(
+                    'flex items-center justify-center w-full h-full text-xl cursor-pointer scale-130 hover:scale-170 transition-all duration-300 disabled:cursor-not-allowed',
+                    quantity === 1 ? 'opacity-40' : 'opacity-100',
+                )}
+                onClick={() => updateQuantity(quantity - 1)}
+            >
+                -
+            </button>
+            <div
+                className="flex items-center justify-center w-full h-full text-base"
+                aria-live="polite"
+            >
+                {quantity}
+            </div>
+            <button
+                type="button"
+                aria-label="Increase quantity"
+                disabled={quantity >= limit}
+                className={clsx(
+                    'flex items-center justify-center w-full h-full text-xl cursor-pointer scale-130 hover:scale-170 transition-all duration-300 disabled:cursor-not-allowed',
+                    quantity === limit ? 'opacity-40' : 'opacity-100',
+                )}
+                onClick={() => updateQuantity(quantity + 1)}
+            >
+                +
+            </button>
+        </div>
     )
 }

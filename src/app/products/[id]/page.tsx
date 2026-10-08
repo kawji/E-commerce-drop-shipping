@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import ProductPage from '@/layout/productpage'
-import { PRODUCTS } from '@/data/productMockData'
+import { getProductByIdOrSlug } from '@/lib/actions/products'
 
 type ProductDetailPageProps = {
     params: Promise<{ id: string }>
@@ -8,7 +8,8 @@ type ProductDetailPageProps = {
 
 export default async function ProductDetailPage({ params }: ProductDetailPageProps) {
     const { id } = await params
-    const product = PRODUCTS.find((item) => item.id === id)
+    // Server Action — resolves either the uuid id or the slug.
+    const product = await getProductByIdOrSlug(id)
 
     if (!product) {
         notFound()

@@ -6,9 +6,14 @@ import Image from 'next/image'
 import BtnSort from '@/components/btnSort'
 import ItemProduct from '@/components/itemProduct'
 import Navbar from '@/components/navbar'
-import { FEED_PRODUCTS } from '@/data/productMockData'
+import type { Product } from '@/type/product'
 
-export default function Feedpage() {
+type FeedpageProps = {
+    /** Products loaded server-side via the `getProducts()` Server Action. */
+    products: readonly Product[]
+}
+
+export default function Feedpage({ products }: FeedpageProps) {
     const t = useTranslations('HomePage')
 
     return (
@@ -59,7 +64,7 @@ export default function Feedpage() {
                     <p>Headphones For You!</p>
                 </div>
                 <div className='grid 2xl:grid-cols-6 xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 xs:grid-cols-2 grid-cols-1 w-full max-w-380 gap-4 mt-5 '>
-                    {FEED_PRODUCTS.map((product) => (
+                    {products.map((product) => (
                         <ItemProduct key={product.id} product={product} />
                     ))}
                 </div>

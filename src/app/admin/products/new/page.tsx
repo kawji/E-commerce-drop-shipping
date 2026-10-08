@@ -2,9 +2,18 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { PRODUCTS } from "@/data/productMockData";
+import { createProduct, type CreateProductInput } from "@/lib/actions/products";
 import { formatPrice } from "@/lib/formatPrice";
-import type { Cents, CurrencyCode, ProductStatus } from "@/type/product";
+import type { Cents, CurrencyCode, Product, ProductStatus } from "@/type/product";
+
+/** Static category options (slug, name) offered by the admin form. */
+const CATEGORY_OPTIONS: { slug: string; name: string }[] = [
+  { slug: "headphones", name: "Headphones" },
+  { slug: "electronics", name: "Electronics" },
+  { slug: "wearables", name: "Wearables" },
+  { slug: "tablets", name: "Tablets" },
+  { slug: "computers", name: "Computers" },
+];
 
 interface AttributeRow {
   id: string;
@@ -66,13 +75,7 @@ function SectionCard({
 }
 
 export default function AdminNewProductPage() {
-  const categories = useMemo(() => {
-    const map = new Map<string, string>();
-    for (const p of PRODUCTS) {
-      if (!map.has(p.category.slug)) map.set(p.category.slug, p.category.name);
-    }
-    return Array.from(map.entries()).map(([slug, name]) => ({ slug, name }));
-  }, []);
+  const categories = CATEGORY_OPTIONS;
 
   const [name, setName] = useState("");
   const [shortDescription, setShortDescription] = useState("");
@@ -101,7 +104,8 @@ export default function AdminNewProductPage() {
   ]);
 
   const [status, setStatus] = useState<ProductStatus>("draft");
-  const [savedPreview, setSavedPreview] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [savedProduct, setSavedProduct] = useState<Product | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const priceCents = parseMajorToCents(priceMajor);
@@ -160,43 +164,53 @@ export default function AdminNewProductPage() {
     setVariants((prev) => prev.filter((v) => v.id !== id));
   }
 
-  function buildPayload(nextStatus: ProductStatus) {
-    const variantPayload = variants
-      .filter((v) => v.name.trim() || v.sku.trim())
-      .map((v, i) => ({
-        id: `new-variant-${i + 1}`,
-        sku: v.sku.trim() || `NEW-SKU-${i + 1}`,
-        name: v.name.trim() || `Variant ${i + 1}`,
-        priceCents: parseMajorToCents(v.priceMajor),
-        stockQuantity: Number.parseInt(v.stock, 10) || 0,
-        attributesText: v.attributesText.trim(),
-      }));
+  /** "Color=Red, Size=XL" -> { Color: "Red", Size: "XL" } */
+  function parseAttributesText(text: string): Record<string, string> {
+    const result: Record<string, string> = {};
+    for (const pair of text.split(",")) {
+      const separatorIndex = pair.indexOf("=");
+      if (separatorIndex === -1) continue;
+      const key = pair.slice(0, separatorIndex).trim();
+      if (!key) continue;
+      result[key] = pair.slice(separatorIndex + 1).trim();
+    }
+    return result;
+  }
 
+  /**
+   * Build the Server Action payload. Every price is converted from the
+   * major-unit input ("549.00") to integer cents here, once — the action and
+   * the database only ever see cents.
+   */
+  function buildCreateInput(nextStatus: ProductStatus): CreateProductInput {
     return {
-      id: "new",
-      slug: name
-        .trim()
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-+|-+$/g, ""),
       name: name.trim(),
       shortDescription: shortDescription.trim(),
       description: description.trim(),
-      category: { slug: categorySlug, name: categoryName },
+      category: { id: categorySlug, name: categoryName, slug: categorySlug },
       basePriceCents: priceCents,
-      basePriceMajor: priceMajor,
-      basePriceFormatted: previewFormatted,
       currency,
       stockQuantity: stockValid ? stockNum : 0,
-      attributes: attributes
-        .filter((a) => a.key.trim() || a.value.trim())
-        .map((a) => ({ [a.key.trim() || "(key)"]: a.value })),
-      variants: variantPayload,
+      // Product-level attributes (key/value rows) are stored as specifications.
+      specifications: attributes
+        .filter((a) => a.key.trim())
+        .map((a) => ({ label: a.key.trim(), value: a.value })),
       status: nextStatus,
+      variants: variants
+        .filter((v) => v.name.trim() || v.sku.trim())
+        .map((v, i) => ({
+          sku: v.sku.trim() || `NEW-SKU-${i + 1}`,
+          name: v.name.trim() || `Variant ${i + 1}`,
+          priceCents: parseMajorToCents(v.priceMajor),
+          stockQuantity: Number.parseInt(v.stock, 10) || 0,
+          attributes: parseAttributesText(v.attributesText),
+          isDefault: i === 0,
+        })),
     };
   }
 
-  function handleSave(nextStatus: ProductStatus) {
+  /** Validates the form, then persists via the `createProduct` Server Action. */
+  async function handleSave(nextStatus: ProductStatus) {
     setError(null);
     if (!name.trim()) {
       setError("กรุณากรอกชื่อสินค้า (Section 1)");
@@ -210,9 +224,22 @@ export default function AdminNewProductPage() {
       setError("จำนวนสต็อกต้องเป็นจำนวนเต็ม ≥ 0 (Section 2)");
       return;
     }
-    setStatus(nextStatus);
-    setSavedPreview(JSON.stringify(buildPayload(nextStatus), null, 2));
-    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    setIsSaving(true);
+    try {
+      const result = await createProduct(buildCreateInput(nextStatus));
+      if (!result.ok) {
+        setError(result.error);
+        return;
+      }
+      setStatus(nextStatus);
+      setSavedProduct(result.product);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "บันทึกสินค้าไม่สำเร็จ");
+    } finally {
+      setIsSaving(false);
+    }
   }
 
   return (
@@ -227,7 +254,7 @@ export default function AdminNewProductPage() {
           </Link>
           <div>
             <p className="text-[11px] font-medium tracking-wide text-zinc-500 uppercase">
-              Seller Centre · Mock
+              Seller Centre · Supabase
             </p>
             <h1 className="text-lg leading-tight font-bold text-zinc-900">
               เพิ่มสินค้าใหม่
@@ -239,17 +266,19 @@ export default function AdminNewProductPage() {
           <div className="ms-auto flex items-center gap-2">
             <button
               type="button"
+              disabled={isSaving}
               onClick={() => handleSave("draft")}
-              className="rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-sm font-semibold text-zinc-700 hover:bg-zinc-50"
+              className="rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-sm font-semibold text-zinc-700 hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              Save as Draft
+              {isSaving ? "กำลังบันทึก…" : "Save as Draft"}
             </button>
             <button
               type="button"
+              disabled={isSaving}
               onClick={() => handleSave("active")}
-              className="rounded-lg bg-[#ee4d2d] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#d73211]"
+              className="rounded-lg bg-[#ee4d2d] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#d73211] disabled:cursor-not-allowed disabled:opacity-60"
             >
-              Publish
+              {isSaving ? "กำลังบันทึก…" : "Publish"}
             </button>
           </div>
         </div>
@@ -261,16 +290,26 @@ export default function AdminNewProductPage() {
             {error}
           </div>
         )}
-        {savedPreview && (
+        {savedProduct && (
           <div className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 p-4">
             <p className="text-sm font-bold text-emerald-800">
-              ✅ บันทึกสำเร็จ (Mock) — สถานะ:{" "}
-              {status === "active" ? "Published (active)" : "Draft"} · ราคาถูกเก็บเป็น
-              Cents แล้ว
+              ✅ บันทึกลง Supabase สำเร็จ — สถานะ:{" "}
+              {savedProduct.status === "active"
+                ? "Published (active)"
+                : savedProduct.status}{" "}
+              · ราคาถูกเก็บเป็น Cents แล้ว
             </p>
-            <pre className="mt-2 max-h-64 overflow-auto rounded-lg bg-zinc-900 p-3 font-mono text-xs text-emerald-100">
-              {savedPreview}
-            </pre>
+            <p className="mt-1 font-mono text-xs text-emerald-700">
+              id: {savedProduct.id} · slug: {savedProduct.slug} · basePriceCents:{" "}
+              {savedProduct.basePriceCents.toLocaleString()} · variants:{" "}
+              {savedProduct.variants.length}
+            </p>
+            <Link
+              href={`/products/${savedProduct.id}`}
+              className="mt-2 inline-block text-sm font-semibold text-emerald-800 underline"
+            >
+              ดูหน้าสินค้า →
+            </Link>
           </div>
         )}
 
@@ -338,7 +377,7 @@ export default function AdminNewProductPage() {
                     ))}
                   </select>
                   <p className={hintClass}>
-                    อ้างอิงจากหมวดหมู่ที่มีใน Mock ({categories.length} หมวด)
+                    ตัวเลือกหมวดหมู่ที่รองรับ ({categories.length} หมวด)
                   </p>
                 </div>
                 <div>
@@ -613,17 +652,19 @@ export default function AdminNewProductPage() {
               <div className="flex flex-wrap gap-2 pt-1">
                 <button
                   type="button"
+                  disabled={isSaving}
                   onClick={() => handleSave("draft")}
-                  className="rounded-lg border border-zinc-300 bg-white px-5 py-2.5 text-sm font-semibold text-zinc-700 hover:bg-zinc-50"
+                  className="rounded-lg border border-zinc-300 bg-white px-5 py-2.5 text-sm font-semibold text-zinc-700 hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  Save as Draft
+                  {isSaving ? "กำลังบันทึก…" : "Save as Draft"}
                 </button>
                 <button
                   type="button"
+                  disabled={isSaving}
                   onClick={() => handleSave("active")}
-                  className="rounded-lg bg-[#ee4d2d] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#d73211]"
+                  className="rounded-lg bg-[#ee4d2d] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#d73211] disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  Publish Product
+                  {isSaving ? "กำลังบันทึก…" : "Publish Product"}
                 </button>
                 <Link
                   href="/admin/products"
@@ -706,8 +747,9 @@ export default function AdminNewProductPage() {
                 {"basePriceCents: Cents · stockQuantity: number · status: ProductStatus · variants[].attributes: Record<string,string>"}
               </p>
               <p className="mt-2">
-                ไฟล์นี้เป็น Mock UI เท่านั้น — ยังไม่เชื่อม feedpage / productpage
-                ตาม checkpoint
+                บันทึกผ่าน Server Action{" "}
+                <code className="font-mono">createProduct()</code> ลงตาราง
+                products + product_variants ของ Supabase
               </p>
             </div>
           </aside>

@@ -47,7 +47,7 @@ export default function ProductSpecifications({
                         <div className="w-full sm:w-1/4 shrink-0 font-medium text-black/50">
                             {spec.label}
                         </div>
-                        <div className="w-full sm:flex-1 mt-0.5 sm:mt-0 font-medium text-black/85 break-words">
+                        <div className="w-full sm:flex-1 mt-0.5 sm:mt-0 font-medium text-black/85 wrap-break-word">
                             {spec.value}
                         </div>
                     </div>

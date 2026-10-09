@@ -233,7 +233,7 @@ function ReviewCard({ review, currentUser }: { review: ProductReview; currentUse
             </div>
 
             {/* ===== เนื้้อหา รีวิว ===== */}
-            <p className="w-full text-sm md:text-[15px] leading-relaxed text-black/75 whitespace-pre-line break-words">
+            <p className="w-full text-sm md:text-[15px] leading-relaxed text-black/75 whitespace-pre-line wrap-break-word">
                 {review.comment}
             </p>
 

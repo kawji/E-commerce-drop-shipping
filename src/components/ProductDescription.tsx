@@ -51,7 +51,7 @@ export default function ProductDescription({
                 line-clamp-6 = ย่่อข้้อความเมื่ื่อยังไม่กดอ่า่นเพิ่่มเติม */}
             <div
                 className={clsx(
-                    "w-full text-sm md:text-base font-medium leading-relaxed md:leading-loose text-black/70 whitespace-pre-line break-words",
+                    "w-full text-sm md:text-base font-medium leading-relaxed md:leading-loose text-black/70 whitespace-pre-line wrap-break-word",
                     !expanded && isLong && "line-clamp-6"
                 )}
             >
